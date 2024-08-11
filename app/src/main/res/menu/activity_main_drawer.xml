@@ -20,5 +20,6 @@
             android:id="@+id/nav_exchanges"
             android:icon="@drawable/baseline_compare_arrows_24"
             android:title="@string/menu_exchange" />
+
     </group>
 </menu>
