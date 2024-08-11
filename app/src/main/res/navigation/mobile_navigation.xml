@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.trocapp.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_products"
+        android:name="com.example.trocapp.ui.product.ProductFragment"
+        android:label="@string/menu_products"
+        tools:layout="@layout/fragment_products" />
+
+    <fragment
+        android:id="@+id/nav_propositions"
+        android:name="com.example.trocapp.ui.proposition.PropositionFragment"
+        android:label="@string/menu_proposition"
+        tools:layout="@layout/fragment_propositions" />
+
+    <fragment
+        android:id="@+id/nav_exchanges"
+        android:name="com.example.trocapp.ui.exchange.ExchangeFragment"
+        android:label="@string/menu_exchange"
+        tools:layout="@layout/fragment_exchanges" />
+</navigation>
