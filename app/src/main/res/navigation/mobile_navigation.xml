@@ -18,12 +18,6 @@
         tools:layout="@layout/fragment_products" />
 
     <fragment
-        android:id="@+id/nav_propositions"
-        android:name="com.example.trocapp.ui.proposition.PropositionFragment"
-        android:label="@string/menu_proposition"
-        tools:layout="@layout/fragment_propositions" />
-
-    <fragment
         android:id="@+id/nav_exchanges"
         android:name="com.example.trocapp.ui.exchange.ExchangeFragment"
         android:label="@string/menu_exchange"

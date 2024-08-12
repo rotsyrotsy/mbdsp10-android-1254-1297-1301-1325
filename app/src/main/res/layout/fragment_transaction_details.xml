@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".ui.transaction.TransactionDetailsFragment">
+
+    <TextView
+        android:id="@+id/textPageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exchange details"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_margin="10dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_below="@+id/textPageTitle"
+        >
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/transactionStatus"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#4CAF50"
+            android:text="Accepted"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/textCreationdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:text="Date : "
+            android:textStyle="bold"
+            android:layout_below="@+id/transactionStatus"
+            />
+
+        <TextView
+            android:id="@+id/transactionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_toEndOf="@+id/textCreationdate"
+            android:text="DD/MM/YYYY"
+            android:layout_below="@+id/transactionStatus"
+            />
+
+        <TextView
+            android:id="@+id/textOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="2dp"
+            android:text="Owner : "
+            android:layout_below="@+id/textCreationdate"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/transactionOwner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_below="@+id/transactionDate"
+            android:layout_toEndOf="@+id/textOwner"
+            android:text="Jean Aime"/>
+
+        <TextView
+            android:id="@+id/textTaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="2dp"
+            android:text="Taker : "
+            android:layout_below="@+id/transactionOwner"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/transactionTaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_below="@+id/transactionOwner"
+            android:layout_toEndOf="@+id/textTaker"
+            android:text="Rolland"/>
+
+        <TextView
+            android:id="@+id/textRef"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="2dp"
+            android:text="Ref Transaction : "
+            android:layout_below="@+id/transactionTaker"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/transactionId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_below="@+id/transactionTaker"
+            android:layout_toEndOf="@+id/textRef"
+            android:text="01214634"/>
+
+
+
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".ui.exchange.QRCodeExchangeFragment">
+
+<TextView
+    android:id="@+id/textView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Proceed to exchange"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    android:layout_margin="10dp"/>
+
+<RelativeLayout
+    android:layout_below="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_weight="1"
+    android:background="@drawable/rounded_upload_file"
+    android:backgroundTint="#E4E4E4"
+    android:elevation="60dp">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="167dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="100dp"
+        android:text="Scan the QR Code to create the transaction"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+</RelativeLayout>
+
+</RelativeLayout>

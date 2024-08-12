@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.exchange.CreateExchangeFragment">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose products to exchange"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_margin="10dp"/>
+
+    <CheckBox
+        android:id="@+id/productOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:text="Product 1" />
+
+    <CheckBox
+        android:id="@+id/productTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/productOne"
+        android:text="Product 2" />
+
+    <CheckBox
+        android:id="@+id/product3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/productTwo"
+        android:text="Product 3" />
+    <CheckBox
+        android:id="@+id/product4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/product3"
+        android:text="Product 4" />
+    <CheckBox
+        android:id="@+id/product5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/product4"
+        android:text="Product 5" />
+    <CheckBox
+        android:id="@+id/product6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/product5"
+        android:text="Product 6" />
+
+    <EditText
+        android:id="@+id/deliveryAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:layout_marginStart="5dp"
+        android:layout_below="@+id/product6"
+        android:hint="Delivery Address" />
+
+    <Button
+        android:id="@+id/buttonSaveExchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deliveryAddress"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#4CAF50"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/buttonCancelExchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/deliveryAddress"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/buttonSaveExchange"
+        android:backgroundTint="#FF5722"
+        android:text="Cancel" />
+
+
+</RelativeLayout>

@@ -13,10 +13,6 @@
             android:icon="@drawable/baseline_all_inbox_24"
             android:title="@string/menu_products" />
         <item
-            android:id="@+id/nav_propositions"
-            android:icon="@drawable/baseline_view_list_24"
-            android:title="@string/menu_proposition" />
-        <item
             android:id="@+id/nav_exchanges"
             android:icon="@drawable/baseline_compare_arrows_24"
             android:title="@string/menu_exchange" />

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.transaction.CreateTransactionFragment">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Proceed to exchange"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_margin="10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/textView"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/rounded_upload_file"
+        android:backgroundTint="#E4E4E4"
+        android:elevation="60dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="167dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="100dp"
+            android:text="QR Code Scanned"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="165dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="157dp"
+            android:layout_marginBottom="45dp"
+            android:src="@drawable/baseline_check_circle_24" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Would you like to accept the exchange ?"
+        android:layout_margin="10dp"/>
+
+    <Button
+        android:id="@+id/buttonAcceptTransaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:backgroundTint="#4CAF50"
+        android:text="Accept" />
+
+    <Button
+        android:id="@+id/buttonRejectTransaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="150dp"
+        android:layout_toEndOf="@+id/buttonAcceptTransaction"
+        android:backgroundTint="#F20808"
+        android:text="Reject" />
+
+</RelativeLayout>
