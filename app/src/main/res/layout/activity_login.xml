@@ -13,7 +13,7 @@
     <ImageView
         android:id="@+id/imageView3"
         android:layout_width="409dp"
-        android:layout_height="338dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

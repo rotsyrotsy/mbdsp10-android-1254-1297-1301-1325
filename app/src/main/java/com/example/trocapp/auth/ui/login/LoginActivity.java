@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.trocapp.MainActivity;
+import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.auth.ui.register.RegisterActivity;
 import com.example.trocapp.service.OnVolleyResponseListener;
@@ -62,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                LoginActivity.this.finish();  // Finish the activity
             }
         });
 
@@ -78,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                         Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
+                        LoginActivity.this.finish();  // Finish the activity
                     }
                     @Override
                     public void onFailure(String message) {
@@ -90,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void login(String email, String password, final OnVolleyResponseListener listener){
         loading.setVisibility(View.VISIBLE);
-
-        String url = "https://troctpt-app-ptkun.ondigitalocean.app/api/auth/login";
+        String api = ((MyApplication) this.getApplication()).getApiUrl();
+        String url = api+"/auth/login";
         RequestQueue queue= Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

@@ -1,6 +1,7 @@
 package com.example.trocapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.trocapp.auth.ui.login.LoginActivity;
+import com.example.trocapp.auth.ui.register.RegisterActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -36,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sp = getSharedPreferences("TokenPrefs",MODE_PRIVATE);
+        if(sp.contains("token")==false){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            this.finish();  // Finish the activity
+        }else{
+            Toast.makeText(MainActivity.this, sp.getString("token","noooooooooo"), Toast.LENGTH_LONG).show();
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -85,6 +96,11 @@ public class MainActivity extends AppCompatActivity {
             //startActivity(intent);
             return true;
         }else if (id == R.id.action_signout) {
+            SharedPreferences sp = getSharedPreferences("TokenPrefs",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.remove("token");
+            editor.apply();
+
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;
@@ -100,21 +116,4 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void getData(){
-        String url = "https://troctpt-app-ptkun.ondigitalocean.app/api/products";
-        RequestQueue mRequestQueue= Volley.newRequestQueue(this);
-        StringRequest mStringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(getApplicationContext(), "Response :" + response.toString(), Toast.LENGTH_LONG).show();//display the response on screen
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Error :" + error.toString(), Toast.LENGTH_LONG).show();//display the response on screen
-            }
-        });
-
-        mRequestQueue.add(mStringRequest);
-    }
 }
