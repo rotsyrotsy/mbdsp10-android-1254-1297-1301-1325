@@ -3,7 +3,8 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".ui.rating.RateUserFragment">
+tools:context=".ui.rating.RateUserFragment"
+    android:layout_margin="10dp">
 
     <TextView
         android:id="@+id/textView"
@@ -35,16 +36,18 @@ tools:context=".ui.rating.RateUserFragment">
 
         <RatingBar
             android:id="@+id/ratingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="242dp"
+            android:layout_height="57dp"
+            android:numStars="5"
+            android:stepSize="0.1"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="77dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="75dp"
-            android:layout_marginBottom="21dp" />
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="66dp"
+            android:layout_marginBottom="23dp" />
 
     </RelativeLayout>
 

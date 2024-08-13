@@ -3,10 +3,13 @@ package com.example.trocapp.ui.exchange;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.trocapp.R;
 
@@ -61,6 +64,25 @@ public class CreateExchangeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_exchange, container, false);
+        View root = inflater.inflate(R.layout.fragment_create_exchange, container, false);
+
+        Button buttonSaveExchange = (Button) root.findViewById(R.id.buttonSaveExchange);
+        buttonSaveExchange.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(v);
+                navController.navigate(R.id.action_fragment_create_exchange_to_fragment_exchanges);
+            }
+        });
+
+        Button buttonCancelExchange = (Button) root.findViewById(R.id.buttonCancelExchange);
+        buttonCancelExchange.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(v);
+                navController.popBackStack();
+            }
+        });
+        return root;
     }
 }

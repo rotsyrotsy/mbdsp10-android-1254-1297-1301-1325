@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.product.ProductDetailsFragment">
+    tools:context=".ui.product.ProductDetailsFragment"
+    android:id="@+id/main">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +27,6 @@
                     android:id="@+id/buttonUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="200dp"
                     android:layout_weight="1"
                     android:backgroundTint="#2196F3"
                     android:text="Update" />
@@ -34,7 +35,6 @@
                     android:id="@+id/buttonDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/buttonUpdate"
                     android:layout_weight="1"
@@ -241,7 +241,7 @@
                             android:text="Product 4 - Laptop" />
 
                         <Button
-                            android:id="@+id/buttonSaveExchange"
+                            android:id="@+id/buttonPropose"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/product4"

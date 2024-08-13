@@ -3,23 +3,19 @@ package com.example.trocapp.ui.product;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 
 import com.example.trocapp.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProductDetailsFragment#newInstance} factory method to
+ * Use the {@link UpdateProductFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductDetailsFragment extends Fragment {
+public class UpdateProductFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,7 +26,7 @@ public class ProductDetailsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ProductDetailsFragment() {
+    public UpdateProductFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +36,11 @@ public class ProductDetailsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ProductDetailsFragment.
+     * @return A new instance of fragment UpdateProductFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProductDetailsFragment newInstance(String param1, String param2) {
-        ProductDetailsFragment fragment = new ProductDetailsFragment();
+    public static UpdateProductFragment newInstance(String param1, String param2) {
+        UpdateProductFragment fragment = new UpdateProductFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,25 +61,6 @@ public class ProductDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_product_details, container, false);
-
-        Button buttonUpdate = (Button) root.findViewById(R.id.buttonUpdate);
-        buttonUpdate.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                NavController navController = Navigation.findNavController(v);
-                navController.navigate(R.id.action_fragment_product_details_to_fragment_update_product);
-            }
-        });
-        Button buttonPropose = (Button) root.findViewById(R.id.buttonPropose);
-        buttonPropose.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                NavController navController = Navigation.findNavController(v);
-                navController.navigate(R.id.action_fragment_product_details_to_fragment_create_exchange);
-            }
-        });
-
-        return root;
+        return inflater.inflate(R.layout.fragment_update_product, container, false);
     }
 }

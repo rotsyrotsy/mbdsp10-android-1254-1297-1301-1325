@@ -3,10 +3,13 @@ package com.example.trocapp.ui.product;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.trocapp.R;
 
@@ -61,6 +64,15 @@ public class CreateProductFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_product, container, false);
+        View root = inflater.inflate(R.layout.fragment_create_product, container, false);
+        Button buttonSaveProduct = (Button) root.findViewById(R.id.buttonSaveProduct);
+        buttonSaveProduct.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(v);
+                navController.navigate(R.id.action_nav_create_product_to_nav_products);
+            }
+        });
+        return root;
     }
 }

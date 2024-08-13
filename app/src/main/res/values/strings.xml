@@ -10,7 +10,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_proposition">My propositions</string>
     <string name="menu_products">My products</string>
-    <string name="menu_exchange">Proposed to me</string>
+    <string name="menu_exchange">Exchanges</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

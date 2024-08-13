@@ -3,10 +3,14 @@ package com.example.trocapp.ui.rating;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
 
 import com.example.trocapp.R;
 
@@ -61,6 +65,18 @@ public class RateUserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_rate_user, container, false);
+        View root = inflater.inflate(R.layout.fragment_rate_user, container, false);
+
+        RatingBar ratingBar = (RatingBar) root.findViewById(R.id.ratingBar);
+        ratingBar.setOnRatingBarChangeListener (new RatingBar.OnRatingBarChangeListener(){
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+                NavController navController = Navigation.findNavController(ratingBar);
+                //navController.navigate(R.id.action_nav_rating_to_nav_transaction_details);
+            }
+        });
+
+        return root;
     }
 }

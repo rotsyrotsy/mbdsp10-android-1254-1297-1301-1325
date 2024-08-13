@@ -3,10 +3,13 @@ package com.example.trocapp.ui.transaction;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.trocapp.R;
 
@@ -61,6 +64,17 @@ public class CreateTransactionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_transaction, container, false);
+        View root =  inflater.inflate(R.layout.fragment_create_transaction, container, false);
+
+        Button buttonAcceptTransaction = (Button) root.findViewById(R.id.buttonAcceptTransaction);
+        buttonAcceptTransaction.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(v);
+                navController.navigate(R.id.action_nav_add_transaction_to_nav_rating);
+            }
+        });
+
+        return root;
     }
 }

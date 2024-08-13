@@ -9,18 +9,107 @@
         android:id="@+id/nav_home"
         android:name="com.example.trocapp.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_fragment_home_to_fragment_product_details"
+            app:destination="@id/nav_product_details" />
+        <action
+            android:id="@+id/action_fragment_home_to_fragment_create_product"
+            app:destination="@id/nav_create_product" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_products"
         android:name="com.example.trocapp.ui.product.ProductFragment"
         android:label="@string/menu_products"
-        tools:layout="@layout/fragment_products" />
+        tools:layout="@layout/fragment_products" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_exchanges"
         android:name="com.example.trocapp.ui.exchange.ExchangeFragment"
         android:label="@string/menu_exchange"
-        tools:layout="@layout/fragment_exchanges" />
+        tools:layout="@layout/fragment_exchanges" >
+        <action
+            android:id="@+id/action_nav_exchanges_to_nav_qr_code_exchange"
+            app:destination="@id/nav_qr_code_exchange" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_product_details"
+        android:name="com.example.trocapp.ui.product.ProductDetailsFragment"
+        android:label="Product details"
+        tools:layout="@layout/fragment_product_details">
+        <action
+            android:id="@+id/action_fragment_product_details_to_fragment_update_product"
+            app:destination="@id/nav_update_product" />
+        <action
+            android:id="@+id/action_fragment_product_details_to_fragment_create_exchange"
+            app:destination="@id/nav_create_exchange" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_create_product"
+        android:name="com.example.trocapp.ui.product.CreateProductFragment"
+        android:label="Product details"
+        tools:layout="@layout/fragment_create_product">
+        <action
+            android:id="@+id/action_nav_create_product_to_nav_products"
+            app:destination="@id/nav_products" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_update_product"
+        android:name="com.example.trocapp.ui.product.UpdateProductFragment"
+        android:label="Update product"
+        tools:layout="@layout/fragment_update_product"/>
+
+    <fragment
+        android:id="@+id/nav_create_exchange"
+        android:name="com.example.trocapp.ui.exchange.CreateExchangeFragment"
+        android:label="Create exchange"
+        tools:layout="@layout/fragment_create_exchange">
+        <action
+            android:id="@+id/action_fragment_create_exchange_to_fragment_exchanges"
+            app:destination="@id/nav_exchanges" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_qr_code_exchange"
+        android:name="com.example.trocapp.ui.exchange.QRCodeExchangeFragment"
+        android:label="QR Code Exchange"
+        tools:layout="@layout/fragment_q_r_code_exchange"/>
+
+    <fragment
+        android:id="@+id/nav_add_transaction"
+        android:name="com.example.trocapp.ui.transaction.CreateTransactionFragment"
+        android:label="Add Transaction"
+        tools:layout="@layout/fragment_create_transaction">
+        <action
+            android:id="@+id/action_nav_add_transaction_to_nav_rating"
+            app:destination="@id/nav_rating" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_rating"
+        android:name="com.example.trocapp.ui.rating.RateUserFragment"
+        android:label="Add Transaction"
+        tools:layout="@layout/fragment_rate_user">
+        <action
+            android:id="@+id/action_nav_rating_to_nav_transaction_details"
+            app:destination="@id/nav_transaction_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_transaction_details"
+        android:name="com.example.trocapp.ui.transaction.TransactionDetailsFragment"
+        android:label="Transaction details"
+        tools:layout="@layout/fragment_transaction_details"/>
+
+    <!-- Define the global action -->
+    <action
+        android:id="@+id/action_global_to_nav_add_transaction"
+        app:destination="@id/nav_add_transaction" />
 
 </navigation>
