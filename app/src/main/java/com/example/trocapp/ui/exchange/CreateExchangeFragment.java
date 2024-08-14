@@ -57,7 +57,9 @@ public class CreateExchangeFragment extends Fragment {
         List<Integer> ownerProducts = getArguments().getIntegerArrayList("ownerProducts");
         Integer ownerId = getArguments().getInt("ownerId");
 
-        Integer userId = 1;
+        Integer userId = getContext()
+                .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
+                .getInt("userId",-1);
         getUserProducts(userId, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(String message) {

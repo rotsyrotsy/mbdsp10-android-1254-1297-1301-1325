@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences sp = getSharedPreferences("TokenPrefs",MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putString("token",data.getString("access_token"));
+                        editor.putInt("userId",data.getJSONObject("user").getInt("id"));
                         editor.apply();
                         listener.onSuccess(message);
                     }else{
