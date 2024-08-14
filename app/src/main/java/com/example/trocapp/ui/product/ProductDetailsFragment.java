@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,16 +28,23 @@ import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.service.ImageLoader;
 import com.example.trocapp.service.OnVolleyResponseListener;
+import com.example.trocapp.ui.home.HomeProductAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProductDetailsFragment extends Fragment {
     private JSONObject product;
+    private JSONArray productList;
+    private ArrayList<Integer> ownerProducts;
+    private Integer ownerId;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,18 +84,52 @@ public class ProductDetailsFragment extends Fragment {
                         }
                     }
                     productCategories.setText(categoriesStr);*/
-                    String ownerName = product.getJSONObject("actual_owner").getString("username");
+                    JSONObject owner = product.getJSONObject("actual_owner");
+                    ownerId = owner.getInt("id");
                     productName.setText(product.getString("product_name"));
-                    productOwner.setText(ownerName);
+                    productOwner.setText(owner.getString("username"));
                     productDescription.setText(product.getString("description"));
                     productFirstOwner.setText(product.getJSONObject("first_owner").getString("username"));
                     productCreationDate.setText(product.getString("createdAt"));
-                    textProductList.setText(ownerName+"'s exchangeable products");
+                    textProductList.setText(owner.getString("username")+"'s exchangeable products");
+
+                    getUserProducts(ownerId, new OnVolleyResponseListener() {
+                        @Override
+                        public void onSuccess(String message) {
+                            ArrayList<JSONObject> list = new ArrayList<>();
+                            for (int i = 0; i < productList.length(); i++) {
+                                try {
+                                    list.add(productList.getJSONObject(i));
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            ProductCheckboxAdapter adapter = new ProductCheckboxAdapter(root.getContext(), list);
+                            GridLayout layout = root.findViewById(R.id.userProductList);
+
+                            for(int i =0; i<adapter.getCount(); i++){
+                                View item = adapter.getView(i,null,layout);
+                                layout.addView(item);
+                                CheckBox checkBox = item.findViewById(R.id.nameAndCategories);
+                                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                        if(isChecked){
+                                            ownerProducts.add(compoundButton.getId());
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        @Override
+                        public void onFailure(String message) {
+
+                        }
+                    });
 
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
-
 
                 Button buttonUpdate = (Button) root.findViewById(R.id.buttonUpdate);
                 buttonUpdate.setOnClickListener(new View.OnClickListener(){
@@ -99,8 +143,11 @@ public class ProductDetailsFragment extends Fragment {
                 buttonPropose.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putIntegerArrayList("ownerProducts", ownerProducts);
+                        bundle.putInt("ownerId", ownerId);
                         NavController navController = Navigation.findNavController(v);
-                        navController.navigate(R.id.action_fragment_product_details_to_fragment_create_exchange);
+                        navController.navigate(R.id.action_fragment_product_details_to_fragment_create_exchange, bundle);
                     }
                 });
             }
@@ -160,4 +207,48 @@ public class ProductDetailsFragment extends Fragment {
         };
         queue.add(stringRequest);
     }
+    private void getUserProducts(Integer userId, final OnVolleyResponseListener listener){
+        String url = ((MyApplication) getActivity().getApplication()).getApiUrl() + "/products";
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                response -> {
+                    try {
+                        JSONObject respObj = new JSONObject(response);
+                        productList = respObj.getJSONArray("data");
+                        listener.onSuccess(respObj.getString("message"));
+                    } catch (JSONException e) {
+                        listener.onFailure(e.getMessage());
+                    }
+                },
+                error -> {
+                    String message = "An error occurred";
+                    if (error.networkResponse != null && error.networkResponse.data != null) {
+                        try {
+                            JSONObject errorObj = new JSONObject(new String(error.networkResponse.data));
+                            message = errorObj.getString("message");
+                        } catch (JSONException e) {
+                            message = new String(error.networkResponse.data);
+                        }
+                    }
+                    listener.onFailure(message);
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("x-auth-token", getContext()
+                                .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
+                                .getString("token", null));
+                        return params;
+                    }
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("userId", String.valueOf(userId));
+                        return params;
+                    }
+                };
+        queue.add(stringRequest);
+    }
+
 }
