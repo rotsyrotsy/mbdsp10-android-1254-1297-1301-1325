@@ -44,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             this.finish();  // Finish the activity
-        }else{
-            Toast.makeText(MainActivity.this, sp.getString("token","noooooooooo"), Toast.LENGTH_LONG).show();
         }
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

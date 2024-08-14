@@ -1,0 +1,21 @@
+<!-- res/drawable/placeholder_image_with_text.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#CCCCCC" /> <!-- Light gray background -->
+            <corners android:radius="8dp" /> <!-- Rounded corners -->
+        </shape>
+    </item>
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/baseline_close_24" /> <!-- Optional icon -->
+    </item>
+    <item>
+        <text
+            android:gravity="center"
+            android:text="No Image"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+    </item>
+</layer-list>
