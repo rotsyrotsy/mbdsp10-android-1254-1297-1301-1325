@@ -88,7 +88,7 @@
                     android:id="@+id/textCategories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textProductName"
+                    android:layout_below="@+id/productName"
                     android:layout_margin="2dp"
                     android:text="Categories : "
                     android:textStyle="bold" />
@@ -106,7 +106,7 @@
                     android:id="@+id/textOwner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textCategories"
+                    android:layout_below="@+id/productCategories"
                     android:layout_margin="2dp"
                     android:text="Owner : "
                     android:textStyle="bold" />
@@ -124,7 +124,7 @@
                     android:id="@+id/textDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textOwner"
+                    android:layout_below="@+id/productOwner"
                     android:layout_margin="2dp"
                     android:text="Description : "
                     android:textStyle="bold" />

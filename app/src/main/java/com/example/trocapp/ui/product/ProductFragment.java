@@ -79,10 +79,10 @@ public class ProductFragment extends Fragment {
                     ImageButton showBtn = item.findViewById(R.id.buttonShowProduct);
                     showBtn.setOnClickListener(new View.OnClickListener(){
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(View v) {
                             Bundle bundle = new Bundle();
-                            bundle.putString("idProduct", String.valueOf(view.getId()));
-                            NavController navController = Navigation.findNavController(view);
+                            bundle.putString("idProduct", String.valueOf(item.getId()));
+                            NavController navController = Navigation.findNavController(v);
                             navController.navigate(R.id.action_nav_products_to_nav_product_details,bundle);
                         }
                     });

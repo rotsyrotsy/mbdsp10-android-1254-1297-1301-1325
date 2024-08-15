@@ -61,6 +61,7 @@ public class ProductDetailsFragment extends Fragment {
                 product = (JSONObject) data;
                 Integer currentUserId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
 
+                Button buttonPropose = (Button) root.findViewById(R.id.buttonPropose);
                 ImageView productImage = root.findViewById(R.id.productImage);
                 TextView productName = root.findViewById(R.id.productName);
                 TextView productCategories = root.findViewById(R.id.productCategories);
@@ -98,40 +99,65 @@ public class ProductDetailsFragment extends Fragment {
                     productFirstOwner.setText(product.getJSONObject("first_owner").getString("username"));
                     productCreationDate.setText(product.getString("createdAt"));
 
-                    textProductList.setText(owner.getString("username")+"'s exchangeable products");
+                    if(!currentUserId.equals(ownerId)){
+                        buttonPropose.setVisibility(View.VISIBLE);
+                        textProductList.setText(owner.getString("username")+"'s exchangeable products");
+                        productService.getProducts(root.getContext(), ownerId, new OnVolleyResponseListener() {
+                            @Override
+                            public void onSuccess(Object data) {
+                                productList = (JSONArray) data;
+                                ArrayList<JSONObject> list = new ArrayList<>();
+                                for (int i = 0; i < productList.length(); i++) {
+                                    try {
+                                        list.add(productList.getJSONObject(i));
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                                ProductCheckboxAdapter adapter = new ProductCheckboxAdapter(root.getContext(), list);
+                                GridLayout layout = root.findViewById(R.id.userProductList);
 
-                    productService.getProducts(root.getContext(), ownerId, new OnVolleyResponseListener() {
-                        @Override
-                        public void onSuccess(Object data) {
-                            productList = (JSONArray) data;
-                            ArrayList<JSONObject> list = new ArrayList<>();
-                            for (int i = 0; i < productList.length(); i++) {
-                                try {
-                                    list.add(productList.getJSONObject(i));
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
+                                for(int i =0; i<adapter.getCount(); i++){
+                                    View item = adapter.getView(i,null,layout);
+                                    layout.addView(item);
+                                    CheckBox checkBox = item.findViewById(R.id.nameAndCategories);
+                                    checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                            if(isChecked){
+                                                ownerProducts.add(compoundButton.getId());
+                                            }
+                                        }
+                                    });
                                 }
                             }
-                            ProductCheckboxAdapter adapter = new ProductCheckboxAdapter(root.getContext(), list);
-                            GridLayout layout = root.findViewById(R.id.userProductList);
-
-                            for(int i =0; i<adapter.getCount(); i++){
-                                View item = adapter.getView(i,null,layout);
-                                layout.addView(item);
-                                CheckBox checkBox = item.findViewById(R.id.nameAndCategories);
-                                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                    @Override
-                                    public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                                        if(isChecked){
-                                            ownerProducts.add(compoundButton.getId());
-                                        }
-                                    }
-                                });
+                            @Override
+                            public void onFailure(String message) {
+                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
-                        }
+                        });
+
+                        buttonPropose.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Bundle bundle = new Bundle();
+                                bundle.putIntegerArrayList("ownerProducts", ownerProducts);
+                                bundle.putInt("ownerId", ownerId);
+                                NavController navController = Navigation.findNavController(v);
+                                navController.navigate(R.id.action_fragment_product_details_to_fragment_create_exchange, bundle);
+                            }
+                        });
+
+                    }else{
+                        buttonPropose.setVisibility(View.GONE);
+                    }
+
+                    Button buttonUpdate = (Button) root.findViewById(R.id.buttonUpdate);
+                    buttonUpdate.setOnClickListener(new View.OnClickListener(){
                         @Override
-                        public void onFailure(String message) {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        public void onClick(View v) {
+                            NavController navController = Navigation.findNavController(v);
+                            navController.navigate(R.id.action_fragment_product_details_to_fragment_update_product);
                         }
                     });
 
@@ -139,30 +165,6 @@ public class ProductDetailsFragment extends Fragment {
                     throw new RuntimeException(e);
                 }
 
-                Button buttonUpdate = (Button) root.findViewById(R.id.buttonUpdate);
-                buttonUpdate.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        NavController navController = Navigation.findNavController(v);
-                        navController.navigate(R.id.action_fragment_product_details_to_fragment_update_product);
-                    }
-                });
-                Button buttonPropose = (Button) root.findViewById(R.id.buttonPropose);
-                if(!currentUserId.equals(ownerId)){
-                    buttonPropose.setVisibility(View.VISIBLE);
-                }else{
-                    buttonPropose.setVisibility(View.GONE);
-                }
-                buttonPropose.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        bundle.putIntegerArrayList("ownerProducts", ownerProducts);
-                        bundle.putInt("ownerId", ownerId);
-                        NavController navController = Navigation.findNavController(v);
-                        navController.navigate(R.id.action_fragment_product_details_to_fragment_create_exchange, bundle);
-                    }
-                });
             }
 
             @Override

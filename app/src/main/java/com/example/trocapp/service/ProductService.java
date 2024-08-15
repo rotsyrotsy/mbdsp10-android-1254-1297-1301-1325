@@ -62,7 +62,7 @@ public class ProductService {
     }
 
     public void getProduct(Context context, String id, final OnVolleyResponseListener listener){
-        String url = GlobalVariables.apiUrl() + "/products"+id;
+        String url = GlobalVariables.apiUrl() + "/products/"+id;
         RequestQueue queue= Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
