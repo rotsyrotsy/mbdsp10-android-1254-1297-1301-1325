@@ -29,6 +29,7 @@ import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.databinding.FragmentHomeBinding;
 import com.example.trocapp.service.OnVolleyResponseListener;
+import com.example.trocapp.service.ProductService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -41,18 +42,18 @@ import java.util.Map;
 
 public class HomeFragment extends Fragment {
     private JSONArray productList;
-
     private FragmentHomeBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        ProductService productService = new ProductService();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        getProducts(new OnVolleyResponseListener() {
+        productService.getProducts(root.getContext(), null, new OnVolleyResponseListener() {
             @Override
-            public void onSuccess(String message) {
+            public void onSuccess(Object data) {
+                productList = (JSONArray) data;
                 ArrayList<JSONObject> list = new ArrayList<>();
                 for (int i = 0; i < productList.length(); i++) {
                     try {
@@ -71,9 +72,6 @@ public class HomeFragment extends Fragment {
                     item.setOnClickListener(new View.OnClickListener(){
                         @Override
                         public void onClick(View view) {
-                            TextView productName = view.findViewById(R.id.productName);
-                            System.out.println(productName.getText()+" ====== "+view.getId());
-
                             Bundle bundle = new Bundle();
                             bundle.putString("idProduct", String.valueOf(view.getId()));
                             NavController navController = Navigation.findNavController(view);
@@ -81,22 +79,13 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 }
-
-
             }
+
             @Override
             public void onFailure(String message) {
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         });
-        /*RelativeLayout cardProduct = (RelativeLayout) root.findViewById(R.id.cardProduct);
-        cardProduct.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                NavController navController = Navigation.findNavController(v);
-                navController.navigate(R.id.action_fragment_home_to_fragment_product_details);
-            }
-        });*/
 
         FloatingActionButton myFab = (FloatingActionButton) root.findViewById(R.id.buttonDetailsProduct);
         myFab.setOnClickListener(new View.OnClickListener(){
@@ -106,9 +95,6 @@ public class HomeFragment extends Fragment {
                 navController.navigate(R.id.action_fragment_home_to_fragment_create_product);
             }
         });
-
-
-
         return root;
     }
 
@@ -116,42 +102,5 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-    private void getProducts(final OnVolleyResponseListener listener){
-        String url = ((MyApplication) getActivity().getApplication()).getApiUrl() + "/products";
-        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    try {
-                        JSONObject respObj = new JSONObject(response);
-                        productList = respObj.getJSONArray("data");
-                        listener.onSuccess(respObj.getString("message"));
-                    } catch (JSONException e) {
-                        listener.onFailure(e.getMessage());
-                    }
-                },
-                error -> {
-                    String message = "An error occurred";
-                    if (error.networkResponse != null && error.networkResponse.data != null) {
-                        try {
-                            JSONObject errorObj = new JSONObject(new String(error.networkResponse.data));
-                            message = errorObj.getString("message");
-                        } catch (JSONException e) {
-                            message = new String(error.networkResponse.data);
-                        }
-                    }
-                    listener.onFailure(message);
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("x-auth-token", getContext()
-                                .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
-                                .getString("token", null));
-                        return params;
-                    }
-                };
-        queue.add(stringRequest);
     }
 }

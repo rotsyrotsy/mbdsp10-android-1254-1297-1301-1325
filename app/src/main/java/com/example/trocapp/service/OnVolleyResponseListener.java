@@ -1,6 +1,6 @@
 package com.example.trocapp.service;
 
 public interface OnVolleyResponseListener {
-    void onSuccess(String message);
+    void onSuccess(Object data);
     void onFailure(String message);
 }

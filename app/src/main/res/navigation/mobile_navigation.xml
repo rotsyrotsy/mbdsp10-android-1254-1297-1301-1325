@@ -23,6 +23,9 @@
         android:name="com.example.trocapp.ui.product.ProductFragment"
         android:label="@string/menu_products"
         tools:layout="@layout/fragment_products" >
+        <action
+            android:id="@+id/action_nav_products_to_nav_product_details"
+            app:destination="@id/nav_product_details" />
     </fragment>
 
     <fragment

@@ -1,48 +1,89 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="0dp"
     android:layout_height="match_parent"
     android:layout_columnWeight="1"
     android:layout_margin="5dp"
-    android:background="#FDFDFD"
-    android:elevation="5dp"
-    >
+    android:background="@drawable/rounded_upload_file"
+    android:backgroundTint="#59E4E4E4"
+    android:elevation="5dp">
+        <ImageButton
+            android:id="@+id/buttonShowProduct"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="#3F51B5"
+            android:src="@android:drawable/ic_menu_view"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <ImageView
-        android:id="@+id/productImage"
-        android:layout_width="match_parent"
-        android:layout_height="161dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="10dp"
-        tools:src="@drawable/img3" />
+        <ImageView
+            android:id="@+id/productImage"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            app:layout_constraintTop_toBottomOf="@+id/buttonShowProduct" />
 
-    <TextView
-        android:id="@+id/productName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Product name"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/productImage" />
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name : "
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/productImage" />
 
-    <TextView
-        android:id="@+id/productCategories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="categories"
-        android:textColor="#3F51B5"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/productName" />
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/textView7"
+            app:layout_constraintTop_toBottomOf="@+id/productImage" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date : "
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/productName" />
+
+        <TextView
+            android:id="@+id/productCreationDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/textView17"
+            app:layout_constraintTop_toBottomOf="@+id/productName" />
+
+
+        <TextView
+            android:id="@+id/textCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories : "
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/productCreationDate" />
+
+        <TextView
+            android:id="@+id/productCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/textCategories"
+            app:layout_constraintTop_toBottomOf="@+id/productCreationDate" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/isExchangeable"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:backgroundTint="#4CAF50"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textSize="9sp"
+            app:layout_constraintTop_toBottomOf="@+id/productCategories" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

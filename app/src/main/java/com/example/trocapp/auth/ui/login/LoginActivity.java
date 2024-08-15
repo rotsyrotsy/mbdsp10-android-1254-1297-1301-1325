@@ -76,8 +76,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 login(email.getText().toString(), password.getText().toString(), new OnVolleyResponseListener() {
                     @Override
-                    public void onSuccess(String message) {
-                        Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+                    public void onSuccess(Object message) {
+                        Snackbar.make(v, String.valueOf(message), Snackbar.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         LoginActivity.this.finish();  // Finish the activity

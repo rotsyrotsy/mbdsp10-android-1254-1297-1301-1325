@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -28,6 +29,7 @@ import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.service.ImageLoader;
 import com.example.trocapp.service.OnVolleyResponseListener;
+import com.example.trocapp.service.ProductService;
 import com.example.trocapp.ui.home.HomeProductAdapter;
 
 import org.json.JSONArray;
@@ -50,10 +52,14 @@ public class ProductDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_product_details, container, false);
         String idProduct = getArguments().getString("idProduct");
+        ownerProducts = new ArrayList<Integer>();
+        ProductService productService = new ProductService();
 
-        getProduct(idProduct, new OnVolleyResponseListener() {
+        productService.getProduct(root.getContext(), idProduct, new OnVolleyResponseListener() {
             @Override
-            public void onSuccess(String message) {
+            public void onSuccess(Object data) {
+                product = (JSONObject) data;
+                Integer currentUserId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
 
                 ImageView productImage = root.findViewById(R.id.productImage);
                 TextView productName = root.findViewById(R.id.productName);
@@ -91,11 +97,13 @@ public class ProductDetailsFragment extends Fragment {
                     productDescription.setText(product.getString("description"));
                     productFirstOwner.setText(product.getJSONObject("first_owner").getString("username"));
                     productCreationDate.setText(product.getString("createdAt"));
+
                     textProductList.setText(owner.getString("username")+"'s exchangeable products");
 
-                    getUserProducts(ownerId, new OnVolleyResponseListener() {
+                    productService.getProducts(root.getContext(), ownerId, new OnVolleyResponseListener() {
                         @Override
-                        public void onSuccess(String message) {
+                        public void onSuccess(Object data) {
+                            productList = (JSONArray) data;
                             ArrayList<JSONObject> list = new ArrayList<>();
                             for (int i = 0; i < productList.length(); i++) {
                                 try {
@@ -123,7 +131,7 @@ public class ProductDetailsFragment extends Fragment {
                         }
                         @Override
                         public void onFailure(String message) {
-
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -140,6 +148,11 @@ public class ProductDetailsFragment extends Fragment {
                     }
                 });
                 Button buttonPropose = (Button) root.findViewById(R.id.buttonPropose);
+                if(!currentUserId.equals(ownerId)){
+                    buttonPropose.setVisibility(View.VISIBLE);
+                }else{
+                    buttonPropose.setVisibility(View.GONE);
+                }
                 buttonPropose.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
@@ -154,101 +167,13 @@ public class ProductDetailsFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
-
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         });
 
 
 
         return root;
-    }
-
-    private void getProduct(String id, final OnVolleyResponseListener listener){
-
-        String api = ((MyApplication) (getActivity()).getApplication()).getApiUrl();
-        String url = api+"/products/"+id;
-        RequestQueue queue= Volley.newRequestQueue(getActivity().getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject respObj = new JSONObject(response);
-                    String message = respObj.getString("message");
-                    product = respObj.getJSONObject("data");
-                    listener.onSuccess(message);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                    listener.onFailure(e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String message = "An error occurred";
-                if (error.networkResponse != null && error.networkResponse.data != null) {
-                    try {
-                        String jsonString = new String(error.networkResponse.data);
-                        JSONObject errorObj = new JSONObject(jsonString);
-                        message = errorObj.getString("message");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        message = new String(error.networkResponse.data);
-                    }
-                }
-                listener.onFailure(message);
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("x-auth-token", getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getString("token",null));
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
-    private void getUserProducts(Integer userId, final OnVolleyResponseListener listener){
-        String url = ((MyApplication) getActivity().getApplication()).getApiUrl() + "/products";
-        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    try {
-                        JSONObject respObj = new JSONObject(response);
-                        productList = respObj.getJSONArray("data");
-                        listener.onSuccess(respObj.getString("message"));
-                    } catch (JSONException e) {
-                        listener.onFailure(e.getMessage());
-                    }
-                },
-                error -> {
-                    String message = "An error occurred";
-                    if (error.networkResponse != null && error.networkResponse.data != null) {
-                        try {
-                            JSONObject errorObj = new JSONObject(new String(error.networkResponse.data));
-                            message = errorObj.getString("message");
-                        } catch (JSONException e) {
-                            message = new String(error.networkResponse.data);
-                        }
-                    }
-                    listener.onFailure(message);
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("x-auth-token", getContext()
-                                .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
-                                .getString("token", null));
-                        return params;
-                    }
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("userId", String.valueOf(userId));
-                        return params;
-                    }
-                };
-        queue.add(stringRequest);
     }
 
 }
