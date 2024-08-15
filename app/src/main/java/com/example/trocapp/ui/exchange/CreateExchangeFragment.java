@@ -1,6 +1,5 @@
 package com.example.trocapp.ui.exchange;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,14 +16,6 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.service.ExchangeService;
 import com.example.trocapp.service.OnVolleyResponseListener;
@@ -37,15 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateExchangeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CreateExchangeFragment extends Fragment {
     private JSONArray productList;
     private ArrayList<Integer> takerProducts;
@@ -85,7 +69,7 @@ public class CreateExchangeFragment extends Fragment {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                             if(isChecked){
-                                takerProducts.add(compoundButton.getId());
+                                takerProducts.add(item.getId());
                             }
                         }
                     });

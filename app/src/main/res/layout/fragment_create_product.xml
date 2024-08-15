@@ -77,19 +77,28 @@ tools:context=".ui.product.CreateProductFragment"
         android:hint="Description"
         android:layout_margin="8dp"
         android:inputType="textMultiLine" />
-    <Spinner
-        android:id="@+id/categories"
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/textCategories"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Add product categories"
         android:layout_below="@+id/description"
-        android:layout_margin="8dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+        android:layout_margin="10dp"/>
+
+    <GridLayout
+        android:id="@+id/categoryList"
+        android:layout_width= "match_parent"
+        android:layout_height= "wrap_content"
+        android:layout_below="@+id/textCategories"
+        android:columnCount="1">
+
+    </GridLayout>
     <Button
         android:id="@+id/buttonSaveProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/categories"
+        android:layout_below="@+id/categoryList"
         android:layout_margin="8dp"
         android:text="Save" />
 

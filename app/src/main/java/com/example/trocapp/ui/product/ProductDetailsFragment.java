@@ -80,7 +80,7 @@ public class ProductDetailsFragment extends Fragment {
                     } else {
                         productImage.setImageResource(R.drawable.placeholder_image);
                     }
-                    /*JSONArray categories = product.getJSONArray("Categories");
+                    JSONArray categories = product.getJSONArray("Categories");
                     String categoriesStr = "";
                     for (int i = 0; i < categories.length(); i++) {
                         JSONObject category = categories.getJSONObject(i);
@@ -90,7 +90,7 @@ public class ProductDetailsFragment extends Fragment {
                             categoriesStr = categoriesStr.concat(", ");
                         }
                     }
-                    productCategories.setText(categoriesStr);*/
+                    productCategories.setText(categoriesStr);
                     JSONObject owner = product.getJSONObject("actual_owner");
                     ownerId = owner.getInt("id");
                     productName.setText(product.getString("product_name"));
@@ -125,7 +125,7 @@ public class ProductDetailsFragment extends Fragment {
                                         @Override
                                         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                                             if(isChecked){
-                                                ownerProducts.add(compoundButton.getId());
+                                                ownerProducts.add(item.getId());
                                             }
                                         }
                                     });

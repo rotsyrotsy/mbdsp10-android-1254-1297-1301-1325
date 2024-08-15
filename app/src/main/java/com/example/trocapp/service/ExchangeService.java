@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,22 +54,30 @@ public class ExchangeService {
             }
         }) {
             @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("delivery_address", deliveryAddress);
-                params.put("owner_products", new JSONArray(ownerProducts).toString()); // error must be an array
-                params.put("taker_products", new JSONArray(takerProducts).toString()); // error must be an array
-                params.put("owner_id", String.valueOf(ownerId));
-                params.put("taker_id", String.valueOf(takerId));
-                return params;
-            }
-            @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("x-auth-token", context
                         .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
                         .getString("token", null));
+                params.put("Content-Type", "application/json");
                 return params;
+            }
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("delivery_address", deliveryAddress);
+                    jsonObject.put("owner_id", ownerId);
+                    jsonObject.put("taker_id", takerId);
+
+                    JSONArray ownerProductsArray = new JSONArray(ownerProducts);
+                    jsonObject.put("owner_products", ownerProductsArray);
+                    JSONArray takerProductsArray = new JSONArray(takerProducts);
+                    jsonObject.put("taker_products", takerProductsArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
             }
         };
         queue.add(stringRequest);
