@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.example.trocapp.R;
 import com.example.trocapp.service.ImageLoader;
@@ -45,6 +46,7 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
         JSONObject exchange = exchanges.get(position);
 
         TextView createdAt = convertView.findViewById(R.id.createdAt);
+        TextView owner = convertView.findViewById(R.id.owner);
         TextView taker = convertView.findViewById(R.id.taker);
         TextView ownerProducts = convertView.findViewById(R.id.ownerProducts);
         TextView takerProducts = convertView.findViewById(R.id.takerProducts);
@@ -56,22 +58,29 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
 
         // Set the image and text here (Assuming Product has getImage() and getName() methods)
         try {
+            JSONObject takerProposition = exchange.getJSONObject("taker_proposition");
+            JSONObject ownerProposition = exchange.getJSONObject("owner_proposition");
+
             convertView.setId(exchange.getInt("id"));
 
             createdAt.setText(exchange.getString("createdAt"));
-            taker.setText(exchange.getJSONObject("taker_proposition").getInt("user_id"));
+
+            JSONObject ownerUser = ownerProposition.getJSONObject("user");
+            owner.setText(ownerUser.getString("username"));
+            JSONObject takerUser = takerProposition.getJSONObject("user");
+            taker.setText(takerUser.getString("username"));
+
             deliveryAddress.setText(exchange.getString("delivery_address"));
             String statusStr = exchange.getString("status");
             status.setText(statusStr);
             String bgColor="#F2663C";
             if(statusStr.compareTo("ACCEPTED")==0 || statusStr.compareTo("RECEIVED")==0){
                 bgColor = "#4CAF50";
-                if(statusStr.compareTo("RECEIVED")==0){bgColor ="#F2663C";}
                 buttonScanQRCode.setVisibility(View.VISIBLE);
                 buttonAcceptExchange.setVisibility(View.GONE);
                 buttonRejectExchange.setVisibility(View.GONE);
             } else if (statusStr.compareTo("CANCELLED")==0) {
-                bgColor ="#FFE61111";
+                bgColor="#FFE61111";
                 buttonScanQRCode.setVisibility(View.GONE);
                 buttonAcceptExchange.setVisibility(View.GONE);
                 buttonRejectExchange.setVisibility(View.GONE);
@@ -81,10 +90,9 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
                 buttonRejectExchange.setVisibility(View.VISIBLE);
                 buttonScanQRCode.setVisibility(View.GONE);
             }
-            status.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(bgColor)));
+            status.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor(bgColor)));
 
-
-            JSONArray ownerProductsJson = exchange.getJSONObject("owner_proposition").getJSONArray("Products");
+            JSONArray ownerProductsJson = ownerProposition.getJSONArray("Products");
             String ownerProductsStr = "";
             for (int i = 0; i < ownerProductsJson.length(); i++) {
                 JSONObject product = ownerProductsJson.getJSONObject(i);
@@ -96,7 +104,7 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
             }
             ownerProducts.setText(ownerProductsStr);
 
-            JSONArray takerProductsJson = exchange.getJSONObject("taker_proposition").getJSONArray("Products");
+            JSONArray takerProductsJson = takerProposition.getJSONArray("Products");
             String takerProductsStr = "";
             for (int i = 0; i < takerProductsJson.length(); i++) {
                 JSONObject product = takerProductsJson.getJSONObject(i);

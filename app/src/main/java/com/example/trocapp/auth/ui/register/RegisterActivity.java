@@ -25,6 +25,7 @@ import com.example.trocapp.MainActivity;
 import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.auth.ui.login.LoginActivity;
+import com.example.trocapp.service.GlobalVariables;
 import com.example.trocapp.service.OnVolleyResponseListener;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -99,8 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void register(String username, String address, String email, String password, final OnVolleyResponseListener listener){
         loading.setVisibility(View.VISIBLE);
-        String api = ((MyApplication) this.getApplication()).getApiUrl();
-        String url = api+"/auth/register";
+        String url = GlobalVariables.apiUrl() + "/auth/register";
         RequestQueue queue= Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
