@@ -1,18 +1,15 @@
 package com.example.trocapp.ui.product;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,7 +27,6 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -39,19 +35,16 @@ import com.android.volley.toolbox.Volley;
 import com.example.trocapp.R;
 import com.example.trocapp.service.AppHelper;
 import com.example.trocapp.service.CategoryService;
-import com.example.trocapp.service.GlobalVariables;
 import com.example.trocapp.service.OnVolleyResponseListener;
 import com.example.trocapp.service.ProductService;
 import com.example.trocapp.service.VolleyMultipartRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +59,6 @@ public class CreateProductFragment extends Fragment {
     private Bitmap bitmap;
     private String filePath;
     ImageView imageView;
-    private Uri imageUri;
 
 
     @Override
@@ -129,25 +121,35 @@ public class CreateProductFragment extends Fragment {
         buttonSaveProduct.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
                 productservice.createProduct(root.getContext(), name.getText().toString(),description.getText().toString(), categories, new OnVolleyResponseListener() {
                     @Override
                     public void onSuccess(Object data) {
                         JSONObject newProduct = (JSONObject) data;
+                        Integer newProductId= null;
                         try {
+                            newProductId = (Integer) newProduct.get("id");
                             // upload image
-                            //uploadBitmap(bitmap, root.getContext(),16 );
+                            Integer finalNewProductId = newProductId;
+                            productservice.uploadImage(bitmap, root.getContext(), newProductId, new OnVolleyResponseListener() {
+                                @Override
+                                public void onSuccess(Object data) {
+                                    // redirect to product details
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("idProduct", finalNewProductId);
+                                    NavController navController = Navigation.findNavController(v);
+                                    navController.navigate(R.id.action_nav_create_product_to_nav_product_details,bundle);
+                                }
 
-                            // redirect to product details
-                            Bundle bundle = new Bundle();
-                            bundle.putString("idProduct", String.valueOf(newProduct.getInt("id")));
-                            NavController navController = Navigation.findNavController(v);
-                            navController.navigate(R.id.action_nav_create_product_to_nav_product_details,bundle);
-
-
+                                @Override
+                                public void onFailure(String message) {
+                                    Toast.makeText(root.getContext(), message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
+
+
                     }
                     @Override
                     public void onFailure(String message) {
@@ -219,57 +221,6 @@ public class CreateProductFragment extends Fragment {
             }
         }
         return null;
-    }
-    private void uploadBitmap(final Bitmap bitmap, Context context, Integer productId) {
-        String url = GlobalVariables.apiUrl() + "/products/uploadImage/"+productId;
-        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, url,
-                new Response.Listener<NetworkResponse>() {
-                    @Override
-                    public void onResponse(NetworkResponse response) {
-                        try {
-                            JSONObject obj = new JSONObject(new String(response.data));
-                            Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String message = "An error occurred";
-                        if (error.networkResponse != null && error.networkResponse.data != null) {
-                            try {
-                                String jsonString = new String(error.networkResponse.data);
-                                JSONObject errorObj = new JSONObject(jsonString);
-                                message = jsonString;
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                message = new String(error.networkResponse.data);
-                            }
-                        }
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, DataPart> getByteData() {
-                        Map<String, DataPart> params = new HashMap<>();
-                        long imagename = System.currentTimeMillis();
-                        params.put("file", new DataPart(imagename + ".png",AppHelper.getFileDataFromDrawable(getContext(), bitmap),"image/png"));
-                        return params;
-                    }
-                        @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("x-auth-token", context
-                                .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
-                                .getString("token", null));
-                        params.put("Content-Type", "application/json");
-                        return params;
-                    }
-        };
-        //adding the request to volley
-        Volley.newRequestQueue(context).add(volleyMultipartRequest);
     }
 
 

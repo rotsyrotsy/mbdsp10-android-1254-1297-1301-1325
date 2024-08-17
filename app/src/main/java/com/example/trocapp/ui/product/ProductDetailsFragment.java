@@ -46,6 +46,7 @@ public class ProductDetailsFragment extends Fragment {
     private JSONArray productList;
     private ArrayList<Integer> ownerProducts;
     private Integer ownerId;
+    private Integer productId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +73,8 @@ public class ProductDetailsFragment extends Fragment {
                 TextView textProductList = root.findViewById(R.id.textProductList);
 
                 try {
-                    root.setId(product.getInt("id"));
+                    productId = product.getInt("id");
+                    root.setId(productId);
 
                     String imageURL = product.getString("product_image");
                     if (imageURL != null && !imageURL.isEmpty()) {
@@ -161,6 +163,24 @@ public class ProductDetailsFragment extends Fragment {
                         }
                     });
 
+                    Button buttonDelete = root.findViewById(R.id.buttonDelete);
+                    buttonDelete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            productService.deleteProduct(view.getContext(),productId, new OnVolleyResponseListener() {
+                                @Override
+                                public void onSuccess(Object data) {
+                                    Toast.makeText(getActivity(),(String)data, Toast.LENGTH_SHORT).show();
+                                    NavController navController = Navigation.findNavController(view);
+                                    navController.popBackStack();
+                                }
+                                @Override
+                                public void onFailure(String message) {
+                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

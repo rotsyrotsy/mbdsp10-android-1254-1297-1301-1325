@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class CategoryService {
     public void getCategories(Context context, final OnVolleyResponseListener listener) {
-        String url = GlobalVariables.apiUrl() + "/categories";
+        String url = AppHelper.apiUrl() + "/categories";
         RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

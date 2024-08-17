@@ -1,6 +1,8 @@
 package com.example.trocapp.service;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -27,7 +29,7 @@ import java.util.Map;
 public class ProductService {
 
     public void getProducts(Context context,Integer userId, final OnVolleyResponseListener listener) {
-        String url = GlobalVariables.apiUrl() + "/products";
+        String url = AppHelper.apiUrl() + "/products";
         if(userId!=null){
             url = url.concat("?userId=").concat(String.valueOf(userId));
         }
@@ -68,7 +70,7 @@ public class ProductService {
     }
 
     public void getProduct(Context context, String id, final OnVolleyResponseListener listener){
-        String url = GlobalVariables.apiUrl() + "/products/"+id;
+        String url = AppHelper.apiUrl() + "/products/"+id;
         RequestQueue queue= Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -109,7 +111,7 @@ public class ProductService {
         queue.add(stringRequest);
     }
     public void createProduct(Context context, String name, String description, List<Integer> categories, final OnVolleyResponseListener listener){
-        String url = GlobalVariables.apiUrl() + "/products";
+        String url = AppHelper.apiUrl() + "/products";
         RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -160,7 +162,7 @@ public class ProductService {
                     // Assuming 'categories' is a List<Integer>
                     JSONArray categoriesArray = new JSONArray(categories);
                     jsonObject.put("categories", categoriesArray);
-
+                    //jsonObject.put("product_image", JSONObject.NULL);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -169,45 +171,94 @@ public class ProductService {
         };
         queue.add(stringRequest);
     }
-/*
-    public void uploadProductImage(Context context, Integer productId, File file, final OnVolleyResponseListener listener){
-        String url = GlobalVariables.apiUrl() + "/products/uploadImage/"+productId;
-        RequestQueue queue = Volley.newRequestQueue(context);
-        Map<String, String> params = new HashMap<>();
-
+    public void uploadImage(Bitmap bitmap, Context context, Integer productId, final OnVolleyResponseListener listener) {
+        String url = AppHelper.apiUrl() + "/products/uploadImage/"+productId;
         Map<String, String> headers = new HashMap<>();
         headers.put("x-auth-token", context
                 .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
                 .getString("token", null));
 
-        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
-                url,
-                headers,
-                params,
-                file,
-                response -> {
-                    // Handle the response
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, headers, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                String resultResponse = new String(response.data);
+                try {
+                    JSONObject result = new JSONObject(resultResponse);
+                    String message = result.getString("message");
+                    listener.onSuccess(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = "An error occurred";
+                if (error.networkResponse != null && error.networkResponse.data != null) {
                     try {
-                        JSONObject respObj = new JSONObject(String.valueOf(response));
-                        listener.onSuccess(respObj.getString("message"));
+                        JSONObject errorObj = new JSONObject(new String(error.networkResponse.data));
+                        message = errorObj.getString("message");
                     } catch (JSONException e) {
-                        listener.onFailure(e.getMessage());
+                        message = new String(error.networkResponse.data);
                     }
-                },
-                error -> {
-                    // Handle the error
-                    String message = "An error occurred";
-                    if (error.networkResponse != null && error.networkResponse.data != null) {
-                        try {
-                            JSONObject errorObj = new JSONObject(new String(error.networkResponse.data));
-                            message = errorObj.getString("message");
-                        } catch (JSONException e) {
-                            message = new String(error.networkResponse.data);
-                        }
-                    }
-                    listener.onFailure(message);
-                });
+                }
+                listener.onFailure(message);
+            }
+        }) {
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                long imagename = System.currentTimeMillis();
+                params.put("file", new DataPart(imagename+".jpg", AppHelper.getFileDataFromDrawable(context,bitmap), "image/jpeg"));
+                return params;
+            }
+        };
+        Volley.newRequestQueue(context).add(multipartRequest);
+    }
 
-        queue.add(multipartRequest);
-    }*/
+    public void deleteProduct(Context context, Integer productId, final OnVolleyResponseListener listener){
+        String url = AppHelper.apiUrl() + "/products/"+productId;
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject respObj = new JSONObject(response);
+                    String message = respObj.getString("message");
+                    listener.onSuccess(message);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                    listener.onFailure(e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = "An error occurred";
+                if (error.networkResponse != null && error.networkResponse.data != null) {
+                    try {
+                        String jsonString = new String(error.networkResponse.data);
+                        JSONObject errorObj = new JSONObject(jsonString);
+                        message = errorObj.getString("message");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        message = new String(error.networkResponse.data);
+                    }
+                }
+                listener.onFailure(message);
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-auth-token", context
+                        .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
+                        .getString("token", null));
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
 }

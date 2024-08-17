@@ -22,10 +22,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.trocapp.MainActivity;
-import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.auth.ui.register.RegisterActivity;
-import com.example.trocapp.service.GlobalVariables;
+import com.example.trocapp.service.AppHelper;
 import com.example.trocapp.service.OnVolleyResponseListener;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -94,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void login(String email, String password, final OnVolleyResponseListener listener){
         loading.setVisibility(View.VISIBLE);
-        String url = GlobalVariables.apiUrl() + "/auth/login";
+        String url = AppHelper.apiUrl() + "/auth/login";
         RequestQueue queue= Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

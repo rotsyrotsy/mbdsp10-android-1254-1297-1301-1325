@@ -1,7 +1,6 @@
 package com.example.trocapp.auth.ui.register;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,11 +20,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.trocapp.MainActivity;
-import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.auth.ui.login.LoginActivity;
-import com.example.trocapp.service.GlobalVariables;
+import com.example.trocapp.service.AppHelper;
 import com.example.trocapp.service.OnVolleyResponseListener;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -100,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void register(String username, String address, String email, String password, final OnVolleyResponseListener listener){
         loading.setVisibility(View.VISIBLE);
-        String url = GlobalVariables.apiUrl() + "/auth/register";
+        String url = AppHelper.apiUrl() + "/auth/register";
         RequestQueue queue= Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

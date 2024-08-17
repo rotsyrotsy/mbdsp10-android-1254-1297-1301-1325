@@ -12,21 +12,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -34,8 +19,6 @@ import java.util.Map;
 /**
  * Custom request to make multipart header and upload file.
  *
- * Sketch Project Studio
- * Created by Angga on 27/04/2016 12.05.
  */
 public class VolleyMultipartRequest extends Request<NetworkResponse> {
     private final String twoHyphens = "--";
@@ -71,17 +54,22 @@ public class VolleyMultipartRequest extends Request<NetworkResponse> {
      * @param listener      on success event handler
      * @param errorListener on error event handler
      */
-    public VolleyMultipartRequest(int method, String url,
+    public VolleyMultipartRequest(int method, String url,Map<String, String> headers,
                                   Response.Listener<NetworkResponse> listener,
                                   Response.ErrorListener errorListener) {
         super(method, url, errorListener);
         this.mListener = listener;
         this.mErrorListener = errorListener;
+        this.mHeaders = headers;
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        return (mHeaders != null) ? mHeaders : super.getHeaders();
+        if(mHeaders!=null){
+            mHeaders.put("Content-Type","multipart/form-data;boundary=" + boundary);
+            return  mHeaders;
+        }
+        return super.getHeaders();
     }
 
     @Override

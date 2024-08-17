@@ -24,7 +24,7 @@ import java.util.Map;
 public class ExchangeService {
 
     public void createExchange(Context context, String deliveryAddress, List<Integer> ownerProducts, List<Integer> takerProducts, Integer ownerId, Integer takerId, final OnVolleyResponseListener listener){
-        String url = GlobalVariables.apiUrl() + "/exchanges";
+        String url = AppHelper.apiUrl() + "/exchanges";
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -84,7 +84,7 @@ public class ExchangeService {
         queue.add(stringRequest);
     }
     public void getExchanges(Context context, final OnVolleyResponseListener listener) {
-        String url = GlobalVariables.apiUrl() + "/exchanges";
+        String url = AppHelper.apiUrl() + "/exchanges";
         RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -121,7 +121,7 @@ public class ExchangeService {
         queue.add(stringRequest);
     }
     public void updateStatusExchange(Context context, Integer exchangeId,Boolean accept, final OnVolleyResponseListener listener){
-        String url = GlobalVariables.apiUrl() + "/exchanges/"+exchangeId;
+        String url = AppHelper.apiUrl() + "/exchanges/"+exchangeId;
         if(accept){
             url = url+"/accept";
         }else{
