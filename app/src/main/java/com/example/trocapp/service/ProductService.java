@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -168,64 +169,45 @@ public class ProductService {
         };
         queue.add(stringRequest);
     }
-   /* public void uploadProductImage(Context context, Integer productId, final OnVolleyResponseListener listener){
+/*
+    public void uploadProductImage(Context context, Integer productId, File file, final OnVolleyResponseListener listener){
         String url = GlobalVariables.apiUrl() + "/products/uploadImage/"+productId;
         RequestQueue queue = Volley.newRequestQueue(context);
+        Map<String, String> params = new HashMap<>();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try{
-                    JSONObject respObj = new JSONObject(response);
-                    listener.onSuccess(respObj.getString("message"));
-                }catch (JSONException e){
-                    e.printStackTrace();
-                    listener.onFailure(e.getMessage());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String message = "An error occurred";
-                if (error.networkResponse != null && error.networkResponse.data != null) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("x-auth-token", context
+                .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
+                .getString("token", null));
+
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(
+                url,
+                headers,
+                params,
+                file,
+                response -> {
+                    // Handle the response
                     try {
-                        String jsonString = new String(error.networkResponse.data);
-                        JSONObject errorObj = new JSONObject(jsonString);
-                        message = errorObj.getString("message");
+                        JSONObject respObj = new JSONObject(String.valueOf(response));
+                        listener.onSuccess(respObj.getString("message"));
                     } catch (JSONException e) {
-                        e.printStackTrace();
-                        message = new String(error.networkResponse.data);
+                        listener.onFailure(e.getMessage());
                     }
-                }
-                listener.onFailure(message);
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("x-auth-token", context
-                        .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
-                        .getString("token", null));
-                params.put("Content-Type", "multipart/form-data");
-                return params;
-            }
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("product_name", name);
-                    jsonObject.put("description", description);
+                },
+                error -> {
+                    // Handle the error
+                    String message = "An error occurred";
+                    if (error.networkResponse != null && error.networkResponse.data != null) {
+                        try {
+                            JSONObject errorObj = new JSONObject(new String(error.networkResponse.data));
+                            message = errorObj.getString("message");
+                        } catch (JSONException e) {
+                            message = new String(error.networkResponse.data);
+                        }
+                    }
+                    listener.onFailure(message);
+                });
 
-                    // Assuming 'categories' is a List<Integer>
-                    JSONArray categoriesArray = new JSONArray(categories);
-                    jsonObject.put("categories", categoriesArray);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
-            }
-        };
-        queue.add(stringRequest);
+        queue.add(multipartRequest);
     }*/
 }
