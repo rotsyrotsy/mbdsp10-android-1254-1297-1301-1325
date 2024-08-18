@@ -42,6 +42,7 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_exchange, parent, false);
         }
+        Integer currentUserId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
 
         JSONObject exchange = exchanges.get(position);
 
@@ -74,13 +75,16 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
             String statusStr = exchange.getString("status");
             status.setText(statusStr);
             String bgColor="#F2663C";
-            if(statusStr.compareTo("ACCEPTED")==0 || statusStr.compareTo("RECEIVED")==0){
+            if(statusStr.compareTo("ACCEPTED")==0 ){
                 bgColor = "#4CAF50";
                 buttonScanQRCode.setVisibility(View.VISIBLE);
                 buttonAcceptExchange.setVisibility(View.GONE);
                 buttonRejectExchange.setVisibility(View.GONE);
-            } else if (statusStr.compareTo("CANCELLED")==0) {
+            } else if (statusStr.compareTo("CANCELLED")==0 || statusStr.compareTo("RECEIVED")==0) {
                 bgColor="#FFE61111";
+                if(statusStr.compareTo("RECEIVED")==0){
+                    bgColor="#3C3C3C";
+                }
                 buttonScanQRCode.setVisibility(View.GONE);
                 buttonAcceptExchange.setVisibility(View.GONE);
                 buttonRejectExchange.setVisibility(View.GONE);
@@ -91,6 +95,13 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
                 buttonScanQRCode.setVisibility(View.GONE);
             }
             status.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor(bgColor)));
+
+            if(!currentUserId.equals(ownerProposition.getInt("user_id"))){
+                buttonAcceptExchange.setVisibility(View.GONE);
+                buttonRejectExchange.setVisibility(View.GONE);
+            }else{
+                buttonScanQRCode.setVisibility(View.GONE);
+            }
 
             JSONArray ownerProductsJson = ownerProposition.getJSONArray("Products");
             String ownerProductsStr = "";

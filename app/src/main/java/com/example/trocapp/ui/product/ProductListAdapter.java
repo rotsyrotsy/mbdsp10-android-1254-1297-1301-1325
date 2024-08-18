@@ -73,10 +73,11 @@ public class ProductListAdapter extends ArrayAdapter<JSONObject> {
             boolean isExchangeableBool = product.getBoolean("is_exchangeable");
             if(isExchangeableBool){
                 isExchangeable.setText("IS EXCHANGEABLE");
-                isExchangeable.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                isExchangeable.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+
             }else{
                 isExchangeable.setText("NOT EXCHANGEABLE");
-                isExchangeable.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFE61111")));
+                isExchangeable.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor("#FFE61111")));
             }
             productCreationDate.setText(product.getString("createdAt"));
 

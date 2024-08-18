@@ -45,6 +45,7 @@ public class CreateExchangeFragment extends Fragment {
         ProductService productService = new ProductService();
         ExchangeService exchangeService = new ExchangeService();
         Integer userId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
+        Button buttonSaveExchange = (Button) root.findViewById(R.id.buttonSaveExchange);
 
         productService.getProducts(root.getContext(), userId, new OnVolleyResponseListener() {
             @Override
@@ -75,32 +76,31 @@ public class CreateExchangeFragment extends Fragment {
                     });
                 }
 
-                Button buttonSaveExchange = (Button) root.findViewById(R.id.buttonSaveExchange);
-                buttonSaveExchange.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        exchangeService.createExchange(root.getContext(), deliveryAddress.getText().toString(), ownerProducts, takerProducts, ownerId, userId, new OnVolleyResponseListener() {
-                            @Override
-                            public void onSuccess(Object message) {
-                                Snackbar.make(v, String.valueOf(message), Snackbar.LENGTH_LONG).show();
-                                NavController navController = Navigation.findNavController(v);
-                                navController.navigate(R.id.action_fragment_create_exchange_to_fragment_exchanges);
-                            }
-                            @Override
-                            public void onFailure(String message) {
-                                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                    }
-                });
-
             }
             @Override
             public void onFailure(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
+        buttonSaveExchange.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                exchangeService.createExchange(root.getContext(), deliveryAddress.getText().toString(), ownerProducts, takerProducts, ownerId, userId, new OnVolleyResponseListener() {
+                    @Override
+                    public void onSuccess(Object message) {
+                        Snackbar.make(v, String.valueOf(message), Snackbar.LENGTH_LONG).show();
+                        NavController navController = Navigation.findNavController(v);
+                        navController.navigate(R.id.action_fragment_create_exchange_to_fragment_exchanges);
+                    }
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+        });
+
         return root;
     }
 
