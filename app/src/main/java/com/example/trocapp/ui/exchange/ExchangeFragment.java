@@ -92,8 +92,10 @@ public class ExchangeFragment extends Fragment {
                     buttonScanQRCode.setOnClickListener(new View.OnClickListener(){
                         @Override
                         public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("idExchange", String.valueOf(item.getId()));
                             NavController navController = Navigation.findNavController(v);
-                            navController.navigate(R.id.action_nav_exchanges_to_nav_qr_code_exchange);
+                            navController.navigate(R.id.action_nav_exchanges_to_nav_qr_code_exchange, bundle);
                         }
                     });
                 }

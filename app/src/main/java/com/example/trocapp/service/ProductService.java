@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -66,6 +67,10 @@ public class ProductService {
                 return params;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 
@@ -108,6 +113,10 @@ public class ProductService {
                 return params;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
     public void createProduct(Context context, String name, String description, List<Integer> categories, final OnVolleyResponseListener listener){
@@ -169,6 +178,10 @@ public class ProductService {
                 return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
     public void uploadImage(Bitmap bitmap, Context context, Integer productId, final OnVolleyResponseListener listener) {
@@ -212,6 +225,10 @@ public class ProductService {
                 return params;
             }
         };
+        multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(multipartRequest);
     }
 
@@ -258,6 +275,10 @@ public class ProductService {
                 return params;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
     public void updateProduct(Context context,String productId, String name, String description, List<Integer> categories, final OnVolleyResponseListener listener){
@@ -316,6 +337,10 @@ public class ProductService {
                 return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 

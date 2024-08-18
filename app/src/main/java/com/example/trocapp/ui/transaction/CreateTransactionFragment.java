@@ -39,6 +39,7 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
         Button buttonAcceptTransaction = (Button) root.findViewById(R.id.buttonAcceptTransaction);
         Button buttonRejectTransaction = (Button) root.findViewById(R.id.buttonRejectTransaction);
 
+        //get from QR Code
         Integer exchangeId = 5;
         getCurrentLocation();
 
