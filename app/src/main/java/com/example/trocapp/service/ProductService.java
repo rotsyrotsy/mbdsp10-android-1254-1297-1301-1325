@@ -184,8 +184,7 @@ public class ProductService {
                 String resultResponse = new String(response.data);
                 try {
                     JSONObject result = new JSONObject(resultResponse);
-                    String message = result.getString("message");
-                    listener.onSuccess(message);
+                    listener.onSuccess(result.getJSONObject("data"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -261,4 +260,63 @@ public class ProductService {
         };
         queue.add(stringRequest);
     }
+    public void updateProduct(Context context,String productId, String name, String description, List<Integer> categories, final OnVolleyResponseListener listener){
+        String url = AppHelper.apiUrl() + "/products/"+productId;
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject respObj = new JSONObject(response);
+                    JSONObject product = respObj.getJSONObject("data");
+                    listener.onSuccess(product);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                    listener.onFailure(e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = "An error occurred";
+                if (error.networkResponse != null && error.networkResponse.data != null) {
+                    try {
+                        String jsonString = new String(error.networkResponse.data);
+                        JSONObject errorObj = new JSONObject(jsonString);
+                        message = errorObj.getString("message");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        message = new String(error.networkResponse.data);
+                    }
+                }
+                listener.onFailure(message);
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("x-auth-token", context
+                        .getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
+                        .getString("token", null));
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("product_name", name);
+                    jsonObject.put("description", description);
+                    JSONArray categoriesArray = new JSONArray(categories);
+                    jsonObject.put("categories", categoriesArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonObject.toString().getBytes(StandardCharsets.UTF_8);
+            }
+        };
+        queue.add(stringRequest);
+    }
+
 }

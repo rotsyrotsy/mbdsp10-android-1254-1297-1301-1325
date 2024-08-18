@@ -29,7 +29,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:backgroundTint="#2196F3"
-                    android:text="Update" />
+                    android:text="Update"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/buttonDelete"
@@ -39,7 +40,8 @@
                     android:layout_toEndOf="@+id/buttonUpdate"
                     android:layout_weight="1"
                     android:backgroundTint="#ED291B"
-                    android:text="Delete" />
+                    android:text="Delete"
+                    android:visibility="gone" />
             </RelativeLayout>
 
         </LinearLayout>

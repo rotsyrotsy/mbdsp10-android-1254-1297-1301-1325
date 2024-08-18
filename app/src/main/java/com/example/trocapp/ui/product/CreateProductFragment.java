@@ -54,7 +54,6 @@ public class CreateProductFragment extends Fragment {
 
     private JSONArray categoryList;
     private ArrayList<Integer> categories;
-    private static final int REQUEST_PERMISSIONS = 100;
     private static final int PICK_IMAGE_REQUEST =1 ;
     private Bitmap bitmap;
     private String filePath;
@@ -125,19 +124,21 @@ public class CreateProductFragment extends Fragment {
                     @Override
                     public void onSuccess(Object data) {
                         JSONObject newProduct = (JSONObject) data;
-                        Integer newProductId= null;
                         try {
-                            newProductId = (Integer) newProduct.get("id");
                             // upload image
-                            Integer finalNewProductId = newProductId;
-                            productservice.uploadImage(bitmap, root.getContext(), newProductId, new OnVolleyResponseListener() {
+                            productservice.uploadImage(bitmap, root.getContext(), newProduct.getInt("id"), new OnVolleyResponseListener() {
                                 @Override
                                 public void onSuccess(Object data) {
                                     // redirect to product details
-                                    Bundle bundle = new Bundle();
-                                    bundle.putInt("idProduct", finalNewProductId);
-                                    NavController navController = Navigation.findNavController(v);
-                                    navController.navigate(R.id.action_nav_create_product_to_nav_product_details,bundle);
+                                    JSONObject updatedProduct = (JSONObject) data;
+                                    try {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("idProduct", String.valueOf(updatedProduct.getInt("id")));
+                                        NavController navController = Navigation.findNavController(v);
+                                        navController.navigate(R.id.action_nav_create_product_to_nav_product_details,bundle);
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
 
                                 @Override
@@ -175,7 +176,7 @@ public class CreateProductFragment extends Fragment {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             Uri picUri = data.getData();
-            filePath = getPath(picUri);
+            filePath = AppHelper.getPath(getContext(), picUri);
             if (filePath != null) {
                 try {
                     Log.d("filePath", String.valueOf(filePath));
@@ -192,36 +193,5 @@ public class CreateProductFragment extends Fragment {
         }
 
     }
-    public String getPath(Uri uri) {
-        Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        String document_id = cursor.getString(0);
-        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
-        cursor.close();
-
-        cursor = getContext().getContentResolver().query(
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
-        cursor.moveToFirst();
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        cursor = getContext().getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            int columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-
-            // Check if columnIndex is valid
-            if (columnIndex != -1 && cursor.moveToFirst()) {
-                String filePath = cursor.getString(columnIndex);
-                cursor.close();
-                return filePath;
-            } else {
-                cursor.close();
-                // Handle the case where columnIndex is invalid
-                Toast.makeText(getContext(), "Unable to retrieve the image path.", Toast.LENGTH_SHORT).show();
-            }
-        }
-        return null;
-    }
-
 
 }

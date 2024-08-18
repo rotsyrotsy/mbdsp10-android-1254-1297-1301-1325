@@ -65,7 +65,11 @@
         android:id="@+id/nav_update_product"
         android:name="com.example.trocapp.ui.product.UpdateProductFragment"
         android:label="Update product"
-        tools:layout="@layout/fragment_update_product"/>
+        tools:layout="@layout/fragment_update_product">
+        <action
+            android:id="@+id/action_nav_update_product_to_nav_product_details"
+            app:destination="@id/nav_product_details" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_create_exchange"

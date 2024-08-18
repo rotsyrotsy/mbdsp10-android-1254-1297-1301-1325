@@ -1,5 +1,6 @@
 package com.example.trocapp.ui.exchange;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -43,8 +44,7 @@ public class CreateExchangeFragment extends Fragment {
         EditText deliveryAddress = root.findViewById(R.id.exchangeDeliveryAddress);
         ProductService productService = new ProductService();
         ExchangeService exchangeService = new ExchangeService();
-        //Integer userId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
-        Integer userId = 3;
+        Integer userId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
 
         productService.getProducts(root.getContext(), userId, new OnVolleyResponseListener() {
             @Override

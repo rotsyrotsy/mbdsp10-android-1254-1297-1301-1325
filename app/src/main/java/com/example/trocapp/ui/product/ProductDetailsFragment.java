@@ -71,6 +71,8 @@ public class ProductDetailsFragment extends Fragment {
                 TextView productFirstOwner = root.findViewById(R.id.productFirstOwner);
                 TextView productCreationDate = root.findViewById(R.id.productCreationDate);
                 TextView textProductList = root.findViewById(R.id.textProductList);
+                Button buttonUpdate = (Button) root.findViewById(R.id.buttonUpdate);
+                Button buttonDelete = root.findViewById(R.id.buttonDelete);
 
                 try {
                     productId = product.getInt("id");
@@ -103,6 +105,9 @@ public class ProductDetailsFragment extends Fragment {
 
                     if(!currentUserId.equals(ownerId)){
                         buttonPropose.setVisibility(View.VISIBLE);
+                        buttonDelete.setVisibility(View.GONE);
+                        buttonUpdate.setVisibility(View.GONE);
+
                         textProductList.setText(owner.getString("username")+"'s exchangeable products");
                         productService.getProducts(root.getContext(), ownerId, new OnVolleyResponseListener() {
                             @Override
@@ -151,36 +156,41 @@ public class ProductDetailsFragment extends Fragment {
                         });
 
                     }else{
+                        buttonDelete.setVisibility(View.VISIBLE);
+                        buttonUpdate.setVisibility(View.VISIBLE);
                         buttonPropose.setVisibility(View.GONE);
+
+                        buttonUpdate.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idProduct", String.valueOf(productId));
+                                NavController navController = Navigation.findNavController(v);
+                                navController.navigate(R.id.action_fragment_product_details_to_fragment_update_product,bundle);
+                            }
+                        });
+
+                        buttonDelete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                productService.deleteProduct(view.getContext(),productId, new OnVolleyResponseListener() {
+                                    @Override
+                                    public void onSuccess(Object data) {
+                                        Toast.makeText(getActivity(),(String)data, Toast.LENGTH_SHORT).show();
+                                        NavController navController = Navigation.findNavController(view);
+                                        navController.popBackStack();
+                                    }
+                                    @Override
+                                    public void onFailure(String message) {
+                                        Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+
                     }
 
-                    Button buttonUpdate = (Button) root.findViewById(R.id.buttonUpdate);
-                    buttonUpdate.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v) {
-                            NavController navController = Navigation.findNavController(v);
-                            navController.navigate(R.id.action_fragment_product_details_to_fragment_update_product);
-                        }
-                    });
 
-                    Button buttonDelete = root.findViewById(R.id.buttonDelete);
-                    buttonDelete.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            productService.deleteProduct(view.getContext(),productId, new OnVolleyResponseListener() {
-                                @Override
-                                public void onSuccess(Object data) {
-                                    Toast.makeText(getActivity(),(String)data, Toast.LENGTH_SHORT).show();
-                                    NavController navController = Navigation.findNavController(view);
-                                    navController.popBackStack();
-                                }
-                                @Override
-                                public void onFailure(String message) {
-                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
