@@ -1,5 +1,6 @@
 package com.example.trocapp.ui.exchange;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.example.trocapp.R;
 import com.example.trocapp.service.ExchangeService;
 import com.example.trocapp.service.OnVolleyResponseListener;
+import com.example.trocapp.ui.rating.RateUserFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -26,7 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ExchangeFragment extends Fragment {
+public class ExchangeFragment extends Fragment{
     private JSONArray exchangeList;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -108,5 +110,4 @@ public class ExchangeFragment extends Fragment {
         });
         return root;
     }
-
 }

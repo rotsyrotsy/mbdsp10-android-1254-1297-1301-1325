@@ -94,8 +94,8 @@
         android:label="Add Transaction"
         tools:layout="@layout/fragment_create_transaction">
         <action
-            android:id="@+id/action_nav_add_transaction_to_nav_rating"
-            app:destination="@id/nav_rating" />
+            android:id="@+id/action_nav_add_transaction_to_nav_exchange_details"
+            app:destination="@id/nav_exchange_details" />
     </fragment>
 
     <fragment
@@ -103,16 +103,14 @@
         android:name="com.example.trocapp.ui.rating.RateUserFragment"
         android:label="Add Transaction"
         tools:layout="@layout/fragment_rate_user">
-        <action
-            android:id="@+id/action_nav_rating_to_nav_transaction_details"
-            app:destination="@id/nav_transaction_details" />
+
     </fragment>
 
     <fragment
-        android:id="@+id/nav_transaction_details"
-        android:name="com.example.trocapp.ui.transaction.TransactionDetailsFragment"
-        android:label="Transaction details"
-        tools:layout="@layout/fragment_transaction_details"/>
+        android:id="@+id/nav_exchange_details"
+        android:name="com.example.trocapp.ui.exchange.ExchangeDetailsFragment"
+        android:label="Exchange details"
+        tools:layout="@layout/fragment_exchange_details"/>
 
     <!-- Define the global action -->
     <action

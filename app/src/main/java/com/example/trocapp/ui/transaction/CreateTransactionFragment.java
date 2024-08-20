@@ -17,54 +17,58 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.trocapp.R;
+import com.example.trocapp.service.AppHelper;
+import com.example.trocapp.service.ExchangeService;
 import com.example.trocapp.service.OnVolleyResponseListener;
 import com.example.trocapp.service.ReceiveService;
+import com.example.trocapp.ui.rating.RateUserFragment;
 import com.google.android.material.snackbar.Snackbar;
 
-public class CreateTransactionFragment extends Fragment implements LocationListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class CreateTransactionFragment extends Fragment implements LocationListener, RateUserFragment.OnPositiveButtonClickListener {
     ReceiveService receiveService = new ReceiveService();
     private LocationManager locationManager;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     Double longitude;
     Double latitude;
+    String url;
+    JSONObject exchange;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root =  inflater.inflate(R.layout.fragment_create_transaction, container, false);
-        Button buttonAcceptTransaction = (Button) root.findViewById(R.id.buttonAcceptTransaction);
-        Button buttonRejectTransaction = (Button) root.findViewById(R.id.buttonRejectTransaction);
-
+        ExchangeService exchangeService = new ExchangeService();
         //get from QR Code
-        Integer exchangeId = 5;
-        getCurrentLocation();
+        String idExchange = getArguments().getString("idExchange");
+        url = AppHelper.apiUrl() + "/exchanges/"+idExchange+"/receive";
 
-        buttonAcceptTransaction.setOnClickListener(new View.OnClickListener(){
+        exchangeService.getExchange(root.getContext(), idExchange, new OnVolleyResponseListener() {
             @Override
-            public void onClick(View v) {
-                receive(exchangeId,true, longitude,latitude);
+            public void onSuccess(Object data) {
+                exchange = (JSONObject) data;
+                getCurrentLocation();
             }
-        });
-        buttonRejectTransaction.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                receive(exchangeId,false, longitude,latitude);
+            public void onFailure(String message) {
+                Toast.makeText(root.getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
 
         return root;
     }
-    private void receive(Integer exchangeId,Boolean accept, Double longitude, Double latitude){
-        receiveService.receiveExchange(getContext(),exchangeId,accept, longitude,latitude, new OnVolleyResponseListener() {
+    private void receive(String url, Double longitude, Double latitude){
+        receiveService.receiveExchange(getContext(),url, longitude,latitude, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object message) {
                 Snackbar.make(getView(), String.valueOf(message), Snackbar.LENGTH_LONG).show();
-                NavController navController = Navigation.findNavController(getView());
-                navController.navigate(R.id.action_nav_add_transaction_to_nav_rating);
+                RateUserFragment rateUserFragment = new RateUserFragment(exchange, CreateTransactionFragment.this);
+                rateUserFragment.show(getParentFragmentManager(), "rateUserDialog");
             }
             @Override
             public void onFailure(String message) {
@@ -117,9 +121,14 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
         double reslongitude = location.getLongitude();
 
         // Use the latitude and longitude values as needed
-        Toast.makeText(getContext(), "Latitude: " + reslatitude + ", Longitude: " + reslongitude, Toast.LENGTH_LONG).show();
         longitude = reslongitude;
         latitude = reslatitude;
+
+        if (getContext() != null && !url.isEmpty() && longitude != null && latitude != null) {
+
+            receive(url, longitude,latitude);
+
+        }
         // Optionally, stop location updates if only one update is needed
         if (locationManager != null) {
             locationManager.removeUpdates(this);
@@ -156,4 +165,18 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
     }
 
 
+    @Override
+    public void onPositiveButtonClick() {
+        try {
+            String idExchange = String.valueOf(exchange.getInt("id"));
+            Bundle bundle = new Bundle();
+            bundle.putString("idExchange", idExchange);
+            NavController navController = Navigation.findNavController(getView());
+            navController.navigate(R.id.action_nav_add_transaction_to_nav_exchange_details, bundle);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 }

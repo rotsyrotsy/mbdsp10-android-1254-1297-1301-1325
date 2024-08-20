@@ -8,7 +8,7 @@ tools:context=".ui.rating.RateUserFragment"
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -20,15 +20,23 @@ tools:context=".ui.rating.RateUserFragment"
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <EditText
+        android:id="@+id/review"
+        android:hint="Review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:layout_margin="10dp"/>
+
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_below="@+id/textView"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/review"
+        android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="@drawable/rounded_upload_file"
         android:backgroundTint="#E4E4E4"
@@ -36,18 +44,18 @@ tools:context=".ui.rating.RateUserFragment"
 
         <RatingBar
             android:id="@+id/ratingBar"
-            android:layout_width="242dp"
-            android:layout_height="57dp"
-            android:numStars="5"
-            android:stepSize="0.1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="64dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="66dp"
-            android:layout_marginBottom="23dp" />
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="20dp"
+            android:numStars="5"
+            android:stepSize="0.1"/>
 
     </RelativeLayout>
 

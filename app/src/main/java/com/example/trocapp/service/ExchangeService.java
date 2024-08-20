@@ -181,4 +181,49 @@ public class ExchangeService {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
+    public void getExchange(Context context, String id, final OnVolleyResponseListener listener){
+        String url = AppHelper.apiUrl() + "/exchanges/"+id;
+        RequestQueue queue= Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject respObj = new JSONObject(response);
+                    JSONObject product = respObj.getJSONObject("data");
+                    listener.onSuccess(product);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                    listener.onFailure(e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = "An error occurred";
+                if (error.networkResponse != null && error.networkResponse.data != null) {
+                    try {
+                        String jsonString = new String(error.networkResponse.data);
+                        JSONObject errorObj = new JSONObject(jsonString);
+                        message = errorObj.getString("message");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        message = new String(error.networkResponse.data);
+                    }
+                }
+                listener.onFailure(message);
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("x-auth-token", context.getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getString("token",null));
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+    }
 }

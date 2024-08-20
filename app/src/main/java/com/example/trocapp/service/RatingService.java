@@ -18,15 +18,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReceiveService {
-    public void receiveExchange(Context context, String url, Double longitude, Double latitude, final OnVolleyResponseListener listener){
+public class RatingService {
+    public void rateUser(Context context, String concernedId, String review, String rating, final OnVolleyResponseListener listener){
+        String url = AppHelper.apiUrl() + "/users/rate";
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     JSONObject respObj = new JSONObject(response);
-                    listener.onSuccess(respObj.getString("message"));
+                    JSONObject product = respObj.getJSONObject("data");
+                    listener.onSuccess(product);
                 }catch (JSONException e){
                     e.printStackTrace();
                     listener.onFailure(e.getMessage());
@@ -48,7 +51,7 @@ public class ReceiveService {
                 }
                 listener.onFailure(message);
             }
-        }) {
+        }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
@@ -62,9 +65,9 @@ public class ReceiveService {
             public byte[] getBody() throws AuthFailureError {
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("accept", true);
-                    jsonObject.put("longitude", longitude);
-                    jsonObject.put("latitude", latitude);
+                    jsonObject.put("concerned_user_id", concernedId);
+                    jsonObject.put("review", review);
+                    jsonObject.put("rating", rating);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -78,3 +81,4 @@ public class ReceiveService {
         queue.add(stringRequest);
     }
 }
+

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.trocapp.R;
+import com.example.trocapp.service.AppHelper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -25,6 +26,7 @@ public class QRCodeExchangeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_q_r_code_exchange, container, false);
         String idExchange = getArguments().getString("idExchange");
         qrCodeIV = root.findViewById(R.id.idIVQrcode);
+
         generateQRCode(idExchange);
         return root;
     }

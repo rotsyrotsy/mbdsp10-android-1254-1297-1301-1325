@@ -1,7 +1,15 @@
 package com.example.trocapp.ui.rating;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -10,73 +18,79 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.trocapp.R;
+import com.example.trocapp.service.OnVolleyResponseListener;
+import com.example.trocapp.service.RatingService;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link RateUserFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class RateUserFragment extends Fragment {
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class RateUserFragment extends DialogFragment {
+    JSONObject exchange;
+    private OnPositiveButtonClickListener positiveButtonClickListener;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RateUserFragment() {
-        // Required empty public constructor
+    public interface OnPositiveButtonClickListener {
+        void onPositiveButtonClick();
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment RateUserFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static RateUserFragment newInstance(String param1, String param2) {
-        RateUserFragment fragment = new RateUserFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public RateUserFragment(JSONObject exchange, OnPositiveButtonClickListener positiveButtonClickListener){
+        this.exchange = exchange;
+        this.positiveButtonClickListener = positiveButtonClickListener;
     }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_rate_user, container, false);
+        RatingService ratingService = new RatingService();
 
-        RatingBar ratingBar = (RatingBar) root.findViewById(R.id.ratingBar);
-        ratingBar.setOnRatingBarChangeListener (new RatingBar.OnRatingBarChangeListener(){
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-                NavController navController = Navigation.findNavController(ratingBar);
-                //navController.navigate(R.id.action_nav_rating_to_nav_transaction_details);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.fragment_rate_user, null);
+
+        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+        ratingBar.setNumStars(5);
+        LayerDrawable stars=(LayerDrawable)ratingBar.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
+
+        EditText review = (EditText) view.findViewById(R.id.review);
+
+        // Inflate and set the layout for the dialog.
+        // Pass null as the parent view because it's going in the dialog layout.
+        builder.setView(view);
+        builder.setPositiveButton("Submit", (DialogInterface.OnClickListener) (dialog, which) -> {
+            try {
+                String reviewStr = review.getText().toString();
+                String ratingStr = String.valueOf(ratingBar.getRating());
+                String concernedId = null;
+                concernedId = String.valueOf(exchange.getJSONObject("taker_proposition").getInt("user_id"));
+
+                ratingService.rateUser(view.getContext(), concernedId, reviewStr, ratingStr, new OnVolleyResponseListener() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        Toast.makeText(view.getContext(), "Thanks for your vote.", Toast.LENGTH_LONG).show();
+                        if (positiveButtonClickListener != null) {
+                            positiveButtonClickListener.onPositiveButtonClick();
+                        }
+                        dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
-        });
 
-        return root;
+        });
+        builder.setNegativeButton("Cancel", (DialogInterface.OnClickListener) (dialog, which) -> {
+            dismiss();
+        });
+        return builder.create();
     }
 }
