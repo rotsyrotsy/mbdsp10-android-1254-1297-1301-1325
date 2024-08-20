@@ -22,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.trocapp.R;
@@ -55,6 +56,8 @@ public class UpdateProductFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_update_product, container, false);
         CategoryService categoryservice = new CategoryService();
         ProductService productservice = new ProductService();
+        ProgressBar loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         String idProduct = getArguments().getString("idProduct");
 
@@ -78,6 +81,7 @@ public class UpdateProductFragment extends Fragment {
                     categoryservice.getCategories(root.getContext(), new OnVolleyResponseListener() {
                         @Override
                         public void onSuccess(Object data) {
+                            loading.setVisibility(View.GONE);
                             categoryList = (JSONArray) data;
                             ArrayList<JSONObject> list = new ArrayList<>();
                             for (int i = 0; i < categoryList.length(); i++) {
@@ -118,7 +122,7 @@ public class UpdateProductFragment extends Fragment {
                         }
                         @Override
                         public void onFailure(String message) {
-
+                            loading.setVisibility(View.GONE);
                         }
                     });
 
@@ -131,6 +135,7 @@ public class UpdateProductFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         });
@@ -149,6 +154,7 @@ public class UpdateProductFragment extends Fragment {
         buttonSaveProduct.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                loading.setVisibility(View.VISIBLE);
                 productservice.updateProduct(root.getContext(), idProduct, name.getText().toString(),description.getText().toString(), categories, new OnVolleyResponseListener() {
                     @Override
                     public void onSuccess(Object data) {
@@ -162,6 +168,7 @@ public class UpdateProductFragment extends Fragment {
                                 productservice.uploadImage(bitmap, root.getContext(), newProductId, new OnVolleyResponseListener() {
                                     @Override
                                     public void onSuccess(Object data) {
+                                        loading.setVisibility(View.GONE);
                                         // redirect to product details
                                         JSONObject updatedProduct = (JSONObject) data;
                                         try {
@@ -175,10 +182,12 @@ public class UpdateProductFragment extends Fragment {
                                     }
                                     @Override
                                     public void onFailure(String message) {
+                                        loading.setVisibility(View.GONE);
                                         Toast.makeText(root.getContext(), message, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }else{
+                                loading.setVisibility(View.GONE);
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("idProduct", Integer.parseInt(idProduct));
                                 NavController navController = Navigation.findNavController(v);
@@ -192,6 +201,7 @@ public class UpdateProductFragment extends Fragment {
                     }
                     @Override
                     public void onFailure(String message) {
+                        loading.setVisibility(View.GONE);
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });

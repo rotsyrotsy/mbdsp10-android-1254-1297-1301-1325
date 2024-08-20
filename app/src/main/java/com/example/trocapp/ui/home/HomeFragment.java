@@ -2,30 +2,22 @@ package com.example.trocapp.ui.home;
 
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.trocapp.MyApplication;
+import com.example.trocapp.MainActivity;
 import com.example.trocapp.R;
 import com.example.trocapp.databinding.FragmentHomeBinding;
 import com.example.trocapp.service.OnVolleyResponseListener;
@@ -37,8 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HomeFragment extends Fragment {
     private JSONArray productList;
@@ -49,10 +39,14 @@ public class HomeFragment extends Fragment {
         ProductService productService = new ProductService();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        ProgressBar loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         productService.getProducts(root.getContext(), null, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object data) {
+                loading.setVisibility(View.GONE);
+
                 productList = (JSONArray) data;
                 ArrayList<JSONObject> list = new ArrayList<>();
                 for (int i = 0; i < productList.length(); i++) {
@@ -83,6 +77,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         });

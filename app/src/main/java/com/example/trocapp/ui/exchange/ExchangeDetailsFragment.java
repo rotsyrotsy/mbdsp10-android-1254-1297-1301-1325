@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +39,13 @@ public class ExchangeDetailsFragment extends Fragment {
         TextView takerProducts = root.findViewById(R.id.takerProducts);
         TextView deliveryAddress = root.findViewById(R.id.deliveryAddress);
         Chip status = root.findViewById(R.id.status);
+        ProgressBar loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         exchangeService.getExchange(root.getContext(), idExchange, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object data) {
+                loading.setVisibility(View.GONE);
                 exchange = (JSONObject) data;
                 try {
                     JSONObject takerProposition = exchange.getJSONObject("taker_proposition");
@@ -88,6 +92,7 @@ public class ExchangeDetailsFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });

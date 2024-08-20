@@ -25,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.NetworkResponse;
@@ -67,6 +68,8 @@ public class CreateProductFragment extends Fragment {
         CategoryService categoryservice = new CategoryService();
         ProductService productservice = new ProductService();
 
+        ProgressBar loading = root.findViewById(R.id.loading);
+
         categories = new ArrayList<Integer>();
         EditText name = root.findViewById(R.id.name);
         EditText description = root.findViewById(R.id.description);
@@ -102,7 +105,6 @@ public class CreateProductFragment extends Fragment {
                     });
                 }
             }
-
             @Override
             public void onFailure(String message) {
 
@@ -120,32 +122,39 @@ public class CreateProductFragment extends Fragment {
         buttonSaveProduct.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                loading.setVisibility(View.VISIBLE);
                 productservice.createProduct(root.getContext(), name.getText().toString(),description.getText().toString(), categories, new OnVolleyResponseListener() {
                     @Override
                     public void onSuccess(Object data) {
                         JSONObject newProduct = (JSONObject) data;
                         try {
                             // upload image
-                            productservice.uploadImage(bitmap, root.getContext(), newProduct.getInt("id"), new OnVolleyResponseListener() {
-                                @Override
-                                public void onSuccess(Object data) {
-                                    // redirect to product details
-                                    JSONObject updatedProduct = (JSONObject) data;
-                                    try {
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("idProduct", String.valueOf(updatedProduct.getInt("id")));
-                                        NavController navController = Navigation.findNavController(v);
-                                        navController.navigate(R.id.action_nav_create_product_to_nav_product_details,bundle);
-                                    } catch (JSONException e) {
-                                        throw new RuntimeException(e);
+                            if(bitmap!=null) {
+                                productservice.uploadImage(bitmap, root.getContext(), newProduct.getInt("id"), new OnVolleyResponseListener() {
+                                    @Override
+                                    public void onSuccess(Object data) {
+                                        loading.setVisibility(View.GONE);
+                                        // redirect to product details
+                                        JSONObject updatedProduct = (JSONObject) data;
+                                        try {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("idProduct", String.valueOf(updatedProduct.getInt("id")));
+                                            NavController navController = Navigation.findNavController(v);
+                                            navController.navigate(R.id.action_nav_create_product_to_nav_product_details, bundle);
+                                        } catch (JSONException e) {
+                                            throw new RuntimeException(e);
+                                        }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(String message) {
-                                    Toast.makeText(root.getContext(), message, Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                    @Override
+                                    public void onFailure(String message) {
+                                        loading.setVisibility(View.GONE);
+                                        Toast.makeText(root.getContext(), message, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }else{
+                                loading.setVisibility(View.GONE);
+                            }
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -154,6 +163,7 @@ public class CreateProductFragment extends Fragment {
                     }
                     @Override
                     public void onFailure(String message) {
+                        loading.setVisibility(View.GONE);
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });

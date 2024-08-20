@@ -149,6 +149,16 @@ tools:context=".ui.exchange.ExchangeDetailsFragment"
 
 
     </RelativeLayout>
-
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginBottom="300dp"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

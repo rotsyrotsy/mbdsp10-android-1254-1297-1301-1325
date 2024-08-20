@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.trocapp.R;
@@ -36,9 +37,13 @@ public class ExchangeFragment extends Fragment{
         View root = inflater.inflate(R.layout.fragment_exchanges, container, false);
         ExchangeService exchangeService = new ExchangeService();
 
+        ProgressBar loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
         exchangeService.getExchanges(root.getContext(), new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object data) {
+                loading.setVisibility(View.GONE);
                 exchangeList = (JSONArray) data;
                 ArrayList<JSONObject> list = new ArrayList<>();
                 for (int i = 0; i < exchangeList.length(); i++) {
@@ -105,6 +110,7 @@ public class ExchangeFragment extends Fragment{
 
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         });

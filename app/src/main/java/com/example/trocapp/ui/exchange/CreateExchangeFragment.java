@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.trocapp.R;
@@ -38,6 +39,9 @@ public class CreateExchangeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_create_exchange, container, false);
+        ProgressBar loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
         List<Integer> ownerProducts = getArguments().getIntegerArrayList("ownerProducts");
         Integer ownerId = getArguments().getInt("ownerId");
         takerProducts = new ArrayList<Integer>();
@@ -50,6 +54,7 @@ public class CreateExchangeFragment extends Fragment {
         productService.getProducts(root.getContext(), userId, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object data) {
+                loading.setVisibility(View.GONE);
                 productList = (JSONArray)data;
                 ArrayList<JSONObject> list = new ArrayList<>();
                 for (int i = 0; i < productList.length(); i++) {
@@ -79,21 +84,26 @@ public class CreateExchangeFragment extends Fragment {
             }
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
         buttonSaveExchange.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                loading.setVisibility(View.VISIBLE);
+
                 exchangeService.createExchange(root.getContext(), deliveryAddress.getText().toString(), ownerProducts, takerProducts, ownerId, userId, new OnVolleyResponseListener() {
                     @Override
                     public void onSuccess(Object message) {
+                        loading.setVisibility(View.GONE);
                         Snackbar.make(v, String.valueOf(message), Snackbar.LENGTH_LONG).show();
                         NavController navController = Navigation.findNavController(v);
                         navController.navigate(R.id.action_fragment_create_exchange_to_fragment_exchanges);
                     }
                     @Override
                     public void onFailure(String message) {
+                        loading.setVisibility(View.GONE);
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
                     }
                 });

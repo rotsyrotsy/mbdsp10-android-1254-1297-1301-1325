@@ -104,7 +104,7 @@ android:layout_margin="10dp">
     android:columnCount="1">
 
 </GridLayout>
-<Button
+    <Button
     android:id="@+id/buttonSaveProduct"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -112,4 +112,15 @@ android:layout_margin="10dp">
     android:layout_margin="8dp"
     android:text="Save" />
 
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginBottom="300dp"
+        android:visibility="gone"
+        />
 </RelativeLayout>

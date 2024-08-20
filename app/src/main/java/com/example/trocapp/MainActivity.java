@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.trocapp.auth.ui.login.LoginActivity;
@@ -29,12 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         SharedPreferences sp = getSharedPreferences("TokenPrefs",MODE_PRIVATE);
         if(sp.contains("token")==false){
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -43,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         setSupportActionBar(binding.appBarMain.toolbar);
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
@@ -102,13 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         // Check if the clicked item is the action_settings
-        if (id == R.id.action_settings) {
-            // Code to handle settings action
-            // Example: Open a settings activity
-            //Intent intent = new Intent(this, SettingsActivity.class);
-            //startActivity(intent);
-            return true;
-        }else if (id == R.id.action_signout) {
+        if (id == R.id.action_signout) {
             SharedPreferences sp = getSharedPreferences("TokenPrefs",MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
             editor.remove("token");

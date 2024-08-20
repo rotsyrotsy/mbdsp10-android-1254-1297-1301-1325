@@ -15,31 +15,20 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.trocapp.MyApplication;
 import com.example.trocapp.R;
 import com.example.trocapp.service.ImageLoader;
 import com.example.trocapp.service.OnVolleyResponseListener;
 import com.example.trocapp.service.ProductService;
-import com.example.trocapp.ui.home.HomeProductAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ProductDetailsFragment extends Fragment {
     private JSONObject product;
@@ -55,10 +44,13 @@ public class ProductDetailsFragment extends Fragment {
         String idProduct = getArguments().getString("idProduct");
         ownerProducts = new ArrayList<Integer>();
         ProductService productService = new ProductService();
+        ProgressBar loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         productService.getProduct(root.getContext(), idProduct, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object data) {
+                loading.setVisibility(View.GONE);
                 product = (JSONObject) data;
                 Integer currentUserId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
 
@@ -199,6 +191,7 @@ public class ProductDetailsFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         });

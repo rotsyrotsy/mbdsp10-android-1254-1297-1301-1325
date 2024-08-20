@@ -72,5 +72,16 @@ tools:context=".ui.home.HomeFragment">
 
     </GridLayout>
 
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="170dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="170dp"
+        android:layout_marginBottom="150dp"
+        android:visibility="gone"
+        />
 </GridLayout>
 </androidx.core.widget.NestedScrollView>

@@ -17,8 +17,11 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.trocapp.MainActivity;
 import com.example.trocapp.R;
 import com.example.trocapp.service.AppHelper;
 import com.example.trocapp.service.ExchangeService;
@@ -38,21 +41,44 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
     Double latitude;
     String url;
     JSONObject exchange;
+    private ProgressBar loading;
+    ImageView checkIcon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root =  inflater.inflate(R.layout.fragment_create_transaction, container, false);
+        loading = root.findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
+        checkIcon = root.findViewById(R.id.imageView12);
+
         ExchangeService exchangeService = new ExchangeService();
         //get from QR Code
         String idExchange = getArguments().getString("idExchange");
         url = AppHelper.apiUrl() + "/exchanges/"+idExchange+"/receive";
 
+
         exchangeService.getExchange(root.getContext(), idExchange, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object data) {
                 exchange = (JSONObject) data;
-                getCurrentLocation();
+
+                Integer ownerId = null;
+                try {
+                    ownerId = exchange.getJSONObject("owner_proposition").getInt("user_id");
+                    Integer currentUserId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
+                    if(ownerId.equals(currentUserId)){
+                        getCurrentLocation();
+                    }else{
+                        Toast.makeText(getContext(), "You are not the owner of the products.", Toast.LENGTH_SHORT).show();
+                        NavController navController = Navigation.findNavController(root);
+                        navController.navigate(R.id.action_nav_add_transaction_to_nav_exchanges);
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
             @Override
             public void onFailure(String message) {
@@ -66,12 +92,15 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
         receiveService.receiveExchange(getContext(),url, longitude,latitude, new OnVolleyResponseListener() {
             @Override
             public void onSuccess(Object message) {
+                loading.setVisibility(View.GONE);
+                checkIcon.setVisibility(View.VISIBLE);
                 Snackbar.make(getView(), String.valueOf(message), Snackbar.LENGTH_LONG).show();
                 RateUserFragment rateUserFragment = new RateUserFragment(exchange, CreateTransactionFragment.this);
                 rateUserFragment.show(getParentFragmentManager(), "rateUserDialog");
             }
             @Override
             public void onFailure(String message) {
+                loading.setVisibility(View.GONE);
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
@@ -79,7 +108,7 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
     private void getCurrentLocation() {
         if (isLocationPermissionGranted()) {
             // Initialize the LocationManager
-            locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
             try {
                 // Request location updates
                 locationManager.requestLocationUpdates(
@@ -95,10 +124,10 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
     }
     private boolean isLocationPermissionGranted() {
         if (ActivityCompat.checkSelfPermission(
-                requireContext(),
+                getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
+                getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED) {
 
