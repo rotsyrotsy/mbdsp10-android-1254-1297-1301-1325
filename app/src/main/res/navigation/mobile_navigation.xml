@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_nav_exchanges_to_nav_qr_code_exchange"
             app:destination="@id/nav_qr_code_exchange" />
+        <action
+            android:id="@+id/action_nav_exchanges_to_nav_exchange_details"
+            app:destination="@id/nav_exchange_details" />
     </fragment>
 
     <fragment
@@ -113,7 +116,11 @@
         android:id="@+id/nav_exchange_details"
         android:name="com.example.trocapp.ui.exchange.ExchangeDetailsFragment"
         android:label="Exchange details"
-        tools:layout="@layout/fragment_exchange_details"/>
+        tools:layout="@layout/fragment_exchange_details">
+        <action
+            android:id="@+id/action_nav_exchange_details_to_nav_add_transaction"
+            app:destination="@id/nav_add_transaction" />
+    </fragment>
 
     <!-- Define the global action -->
     <action

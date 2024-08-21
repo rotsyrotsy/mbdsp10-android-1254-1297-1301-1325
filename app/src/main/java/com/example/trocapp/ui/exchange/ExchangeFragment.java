@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -63,6 +64,8 @@ public class ExchangeFragment extends Fragment{
                     ImageButton buttonAcceptExchange = item.findViewById(R.id.buttonAcceptExchange);
                     ImageButton buttonRejectExchange = item.findViewById(R.id.buttonRejectExchange);
                     ImageButton buttonScanQRCode = item.findViewById(R.id.buttonScanQRCode);
+                    Button buttonShowProduct = item.findViewById(R.id.buttonShowProduct);
+                    String idExchange = String.valueOf(item.getId());
 
                     buttonAcceptExchange.setOnClickListener(new View.OnClickListener(){
                         @Override
@@ -100,9 +103,18 @@ public class ExchangeFragment extends Fragment{
                         @Override
                         public void onClick(View v) {
                             Bundle bundle = new Bundle();
-                            bundle.putString("idExchange", String.valueOf(item.getId()));
+                            bundle.putString("idExchange", idExchange);
                             NavController navController = Navigation.findNavController(v);
                             navController.navigate(R.id.action_nav_exchanges_to_nav_qr_code_exchange, bundle);
+                        }
+                    });
+                    buttonShowProduct.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("idExchange", idExchange);
+                            NavController navController = Navigation.findNavController(v);
+                            navController.navigate(R.id.action_nav_exchanges_to_nav_exchange_details, bundle);
                         }
                     });
                 }

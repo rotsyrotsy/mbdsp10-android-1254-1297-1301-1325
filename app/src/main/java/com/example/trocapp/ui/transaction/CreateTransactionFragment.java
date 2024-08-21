@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -34,7 +35,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CreateTransactionFragment extends Fragment implements LocationListener, RateUserFragment.OnPositiveButtonClickListener {
-    ReceiveService receiveService = new ReceiveService();
     private LocationManager locationManager;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     Double longitude;
@@ -43,6 +43,7 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
     JSONObject exchange;
     private ProgressBar loading;
     ImageView checkIcon;
+    ReceiveService receiveService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,7 +51,7 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
         View root =  inflater.inflate(R.layout.fragment_create_transaction, container, false);
         loading = root.findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
-
+        receiveService = new ReceiveService();
         checkIcon = root.findViewById(R.id.imageView12);
 
         ExchangeService exchangeService = new ExchangeService();
@@ -65,15 +66,24 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
                 exchange = (JSONObject) data;
 
                 Integer ownerId = null;
+                Integer takerId = null;
                 try {
+                    if(exchange.getString("status").compareTo("RECEIVED")==0){
+                        Toast.makeText(root.getContext(), "This exchange is already received.", Toast.LENGTH_SHORT).show();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("idExchange", idExchange);
+                        NavController navController = Navigation.findNavController(root);
+                        navController.navigate(R.id.action_nav_add_transaction_to_nav_exchange_details, bundle);
+                    }
                     ownerId = exchange.getJSONObject("owner_proposition").getInt("user_id");
-                    Integer currentUserId = getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
-                    if(ownerId.equals(currentUserId)){
+                    takerId = exchange.getJSONObject("taker_proposition").getInt("user_id");
+                    Integer currentUserId = root.getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
+                    if(ownerId.equals(currentUserId) || takerId.equals(currentUserId)){
                         getCurrentLocation();
                     }else{
-                        Toast.makeText(getContext(), "You are not the owner of the products.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(root.getContext(), "You are not part of this exchange.", Toast.LENGTH_SHORT).show();
                         NavController navController = Navigation.findNavController(root);
-                        navController.navigate(R.id.action_nav_add_transaction_to_nav_exchanges);
+                        navController.popBackStack();
                     }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -104,6 +114,7 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
+
     }
     private void getCurrentLocation() {
         if (isLocationPermissionGranted()) {

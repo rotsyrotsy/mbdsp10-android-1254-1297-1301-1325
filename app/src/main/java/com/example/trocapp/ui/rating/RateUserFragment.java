@@ -2,6 +2,7 @@ package com.example.trocapp.ui.rating;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -65,8 +66,15 @@ public class RateUserFragment extends DialogFragment {
                 String reviewStr = review.getText().toString();
                 String ratingStr = String.valueOf(ratingBar.getRating());
                 String concernedId = null;
-                concernedId = String.valueOf(exchange.getJSONObject("taker_proposition").getInt("user_id"));
 
+                Integer ownerId = exchange.getJSONObject("owner_proposition").getInt("user_id");
+                Integer takerId = exchange.getJSONObject("taker_proposition").getInt("user_id");
+                Integer currentUserId = view.getContext().getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE).getInt("userId",-1);
+                if(ownerId.equals(currentUserId)){
+                    concernedId = String.valueOf(takerId);
+                }else{
+                    concernedId = String.valueOf(ownerId);
+                }
                 ratingService.rateUser(view.getContext(), concernedId, reviewStr, ratingStr, new OnVolleyResponseListener() {
                     @Override
                     public void onSuccess(Object data) {

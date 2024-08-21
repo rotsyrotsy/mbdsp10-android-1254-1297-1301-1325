@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.example.trocapp.MainActivity;
 import com.example.trocapp.R;
 import com.example.trocapp.service.ExchangeService;
 import com.example.trocapp.service.OnVolleyResponseListener;
+import com.example.trocapp.ui.transaction.CreateTransactionFragment;
 import com.google.android.material.chip.Chip;
 
 import org.json.JSONArray;
@@ -39,6 +45,7 @@ public class ExchangeDetailsFragment extends Fragment {
         TextView takerProducts = root.findViewById(R.id.takerProducts);
         TextView deliveryAddress = root.findViewById(R.id.deliveryAddress);
         Chip status = root.findViewById(R.id.status);
+        Button buttonReceive = root.findViewById(R.id.buttonReceiveExchange);
         ProgressBar loading = root.findViewById(R.id.loading);
         loading.setVisibility(View.VISIBLE);
 
@@ -85,6 +92,20 @@ public class ExchangeDetailsFragment extends Fragment {
                         }
                     }
                     takerProducts.setText(takerProductsStr);
+
+                    if(statusStr.compareTo("ACCEPTED")==0){
+                        buttonReceive.setVisibility(View.VISIBLE);
+                        buttonReceive.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View v) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("idExchange", idExchange);
+                                NavController navController = Navigation.findNavController(v);
+                                navController.navigate(R.id.action_nav_exchange_details_to_nav_add_transaction, bundle);
+                            }
+                        });
+                    }
+
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }

@@ -99,8 +99,6 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
             if(!currentUserId.equals(ownerProposition.getInt("user_id"))){
                 buttonAcceptExchange.setVisibility(View.GONE);
                 buttonRejectExchange.setVisibility(View.GONE);
-            }else{
-                buttonScanQRCode.setVisibility(View.GONE);
             }
 
             JSONArray ownerProductsJson = ownerProposition.getJSONArray("Products");
