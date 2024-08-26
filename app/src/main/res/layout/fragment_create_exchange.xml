@@ -1,62 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.exchange.CreateExchangeFragment"
     android:layout_margin="10dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Choose products to exchange"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_margin="10dp"/>
+    <RelativeLayout  android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <GridLayout
-        android:id="@+id/userProductList"
-        android:layout_width= "match_parent"
-        android:layout_height= "wrap_content"
-        android:layout_below="@+id/textView"
-        android:columnCount="1">
-    </GridLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose products to exchange"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_margin="10dp"/>
+
+        <GridLayout
+            android:id="@+id/userProductList"
+            android:layout_width= "match_parent"
+            android:layout_height= "wrap_content"
+            android:layout_below="@+id/textView"
+            android:columnCount="1">
+        </GridLayout>
 
 
-    <EditText
-        android:id="@+id/exchangeDeliveryAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:layout_marginStart="5dp"
-        android:layout_below="@+id/userProductList"
-        android:hint="Delivery Address" />
+        <EditText
+            android:id="@+id/exchangeDeliveryAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:layout_marginStart="5dp"
+            android:layout_below="@+id/userProductList"
+            android:hint="Delivery Address" />
 
-    <Button
-        android:id="@+id/buttonSaveExchange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/exchangeDeliveryAddress"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="#4CAF50"
-        android:text="Save" />
+        <Button
+            android:id="@+id/buttonSaveExchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/exchangeDeliveryAddress"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#4CAF50"
+            android:text="Save" />
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginStart="170dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginEnd="170dp"
-        android:layout_marginBottom="300dp"
-        android:visibility="gone" />
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="170dp"
+            android:layout_marginTop="300dp"
+            android:layout_marginEnd="170dp"
+            android:layout_marginBottom="300dp"
+            android:visibility="gone" />
 
-</RelativeLayout>
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>
