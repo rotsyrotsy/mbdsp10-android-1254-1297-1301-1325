@@ -198,7 +198,7 @@ public class CreateProductFragment extends Fragment {
             }
             else
             {
-                Toast.makeText(getActivity(),"no image selected",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"Upgrade your firmware",Toast.LENGTH_LONG).show();
             }
         }
 
