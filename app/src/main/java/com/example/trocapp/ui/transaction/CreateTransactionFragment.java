@@ -70,10 +70,8 @@ public class CreateTransactionFragment extends Fragment implements LocationListe
                 try {
                     if(exchange.getString("status").compareTo("RECEIVED")==0){
                         Toast.makeText(root.getContext(), "This exchange is already received.", Toast.LENGTH_SHORT).show();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("idExchange", idExchange);
                         NavController navController = Navigation.findNavController(root);
-                        navController.navigate(R.id.action_nav_add_transaction_to_nav_exchange_details, bundle);
+                        navController.navigate(R.id.action_nav_add_transaction_to_nav_exchanges);
                     }
                     ownerId = exchange.getJSONObject("owner_proposition").getInt("user_id");
                     takerId = exchange.getJSONObject("taker_proposition").getInt("user_id");

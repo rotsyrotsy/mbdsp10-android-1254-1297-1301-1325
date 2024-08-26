@@ -189,7 +189,7 @@ public class UpdateProductFragment extends Fragment {
                             }else{
                                 loading.setVisibility(View.GONE);
                                 Bundle bundle = new Bundle();
-                                bundle.putInt("idProduct", Integer.parseInt(idProduct));
+                                bundle.putString("idProduct", idProduct);
                                 NavController navController = Navigation.findNavController(v);
                                 navController.navigate(R.id.action_nav_update_product_to_nav_product_details,bundle);
                             }

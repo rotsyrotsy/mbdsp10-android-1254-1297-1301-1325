@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -74,6 +76,13 @@ public class ExchangeFragment extends Fragment{
                                 @Override
                                 public void onSuccess(Object message) {
                                     Toast.makeText(view.getContext(), String.valueOf(message), Toast.LENGTH_SHORT).show();
+
+                                    ExchangeFragment fragment  = new ExchangeFragment();
+                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.detach(fragment);
+                                    fragmentTransaction.attach(fragment);
+                                    fragmentTransaction.commit();
                                 }
 
                                 @Override
@@ -90,6 +99,13 @@ public class ExchangeFragment extends Fragment{
                                 @Override
                                 public void onSuccess(Object message) {
                                     Toast.makeText(view.getContext(), String.valueOf(message), Toast.LENGTH_SHORT).show();
+
+                                    ExchangeFragment fragment  = new ExchangeFragment();
+                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    fragmentTransaction.detach(fragment);
+                                    fragmentTransaction.attach(fragment);
+                                    fragmentTransaction.commit();
                                 }
 
                                 @Override

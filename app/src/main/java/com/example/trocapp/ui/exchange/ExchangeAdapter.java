@@ -90,8 +90,10 @@ public class ExchangeAdapter extends ArrayAdapter<JSONObject> {
                 buttonRejectExchange.setVisibility(View.GONE);
             }else{
                 bgColor ="#F2663C";
-                buttonAcceptExchange.setVisibility(View.VISIBLE);
-                buttonRejectExchange.setVisibility(View.VISIBLE);
+                if(statusStr.compareTo("BLOCKED")!=0){
+                    buttonAcceptExchange.setVisibility(View.VISIBLE);
+                    buttonRejectExchange.setVisibility(View.VISIBLE);
+                }
                 buttonScanQRCode.setVisibility(View.GONE);
             }
             status.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor(bgColor)));
